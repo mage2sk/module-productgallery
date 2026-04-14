@@ -10,22 +10,19 @@
  * @var \Panth\ProductGallery\ViewModel\Config $viewModel
  */
 
-// Support both: direct variables from plugin OR block-based rendering
-if (!isset($viewModel)) {
-    $viewModel = $block->getData('view_model');
-}
+// Read from block data (set by plugin)
+$viewModel = $block->getData('panth_gallery_viewmodel') ?: $block->getData('view_model');
 if (!$viewModel instanceof \Panth\ProductGallery\ViewModel\Config) {
     return;
 }
-if (!isset($images) || empty($images)) {
-    $images = method_exists($block, 'getGalleryImages') ? $block->getGalleryImages() : [];
+$images = $block->getData('panth_gallery_images');
+if (empty($images) && method_exists($block, 'getGalleryImages')) {
+    $images = $block->getGalleryImages();
 }
 if (empty($images)) {
     return;
 }
-if (!isset($config)) {
-    $config = $viewModel->getGalleryConfig();
-}
+$config = $block->getData('panth_gallery_config') ?: $viewModel->getGalleryConfig();
 $layoutType = $escaper->escapeHtmlAttr($config['layout_type'] ?? 'horizontal');
 $thumbPosition = 'bottom';
 $mainWidth = 700;

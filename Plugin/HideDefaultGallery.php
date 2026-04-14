@@ -124,25 +124,18 @@ class HideDefaultGallery
             }
 
             $template = $this->themeHelper->isHyva()
-                ? 'hyva/gallery.phtml'
-                : 'gallery.phtml';
+                ? 'Panth_ProductGallery::hyva/gallery.phtml'
+                : 'Panth_ProductGallery::gallery.phtml';
 
-            $templateFile = $subject->getTemplateFile(
-                'Panth_ProductGallery::' . $template
-            );
+            // Use the block's own rendering engine to avoid require statements
+            $subject->setData('panth_gallery_images', $images);
+            $subject->setData('panth_gallery_config', $this->configViewModel->getGalleryConfig());
+            $subject->setData('panth_gallery_viewmodel', $this->configViewModel);
 
-            if (!$templateFile) {
-                return $result;
-            }
-
-            // Render template with our variables
-            $html = $this->renderTemplate($templateFile, [
-                'block' => $subject,
-                'escaper' => $subject->getData('escaper') ?: new \Magento\Framework\Escaper(),
-                'viewModel' => $this->configViewModel,
-                'images' => $images,
-                'config' => $this->configViewModel->getGalleryConfig(),
-            ]);
+            $originalTemplate = $subject->getTemplate();
+            $subject->setTemplate($template);
+            $html = $subject->toHtml();
+            $subject->setTemplate($originalTemplate);
 
             if (!empty($html)) {
                 return $html;
@@ -263,37 +256,4 @@ class HideDefaultGallery
         }
     }
 
-    /**
-     * Render a template file with the given variables
-     *
-     * @param string $templateFile
-     * @param array $vars
-     * @return string
-     */
-    private function renderTemplate(string $templateFile, array $vars): string
-    {
-        $render = \Closure::bind(
-            /**
-             * @param string $___file
-             * @param array $___vars
-             * @return string
-             */
-            static function (string $___file, array $___vars): string {
-                extract($___vars, EXTR_SKIP);
-                ob_start();
-                try {
-                    // phpcs:ignore Magento2.Security.IncludeFile.FoundIncludeFile
-                    require $___file;
-                } catch (\Exception $e) {
-                    ob_end_clean();
-                    throw $e;
-                }
-                return (string) ob_get_clean();
-            },
-            null,
-            null
-        );
-
-        return $render($templateFile, $vars);
-    }
 }
