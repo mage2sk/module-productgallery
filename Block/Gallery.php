@@ -11,6 +11,7 @@ namespace Panth\ProductGallery\Block;
 use Magento\Catalog\Block\Product\AbstractProduct;
 use Magento\Catalog\Block\Product\Context;
 use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Framework\App\ObjectManager;
 use Panth\Core\Helper\Theme;
 use Panth\ProductGallery\Helper\Data as ConfigHelper;
 
@@ -35,14 +36,12 @@ class Gallery extends AbstractProduct
     private ImageHelper $imageHelper;
 
     /**
-     * Optional Panth_AdvancedSEO image template resolver. Soft
-     * dependency injected via di.xml when that module is installed.
-     * Nullable class hint lets PHP resolve lazily so ProductGallery
-     * keeps working if Panth_AdvancedSEO is not installed.
+     * Optional SEO image template resolver from Panth_AdvancedSEO.
+     * Resolved at runtime to avoid ReflectionException when AdvancedSEO is absent.
      *
-     * @var \Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver|null
+     * @var object|null
      */
-    private ?\Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver $imageTemplateResolver;
+    private ?object $imageTemplateResolver = null;
 
     /**
      * @param Context $context
@@ -50,21 +49,36 @@ class Gallery extends AbstractProduct
      * @param Theme $themeHelper
      * @param ImageHelper $imageHelper
      * @param array $data
-     * @param object|null $imageTemplateResolver
      */
     public function __construct(
         Context $context,
         ConfigHelper $configHelper,
         Theme $themeHelper,
         ImageHelper $imageHelper,
-        array $data = [],
-        ?\Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver $imageTemplateResolver = null
+        array $data = []
     ) {
         $this->configHelper = $configHelper;
         $this->themeHelper = $themeHelper;
         $this->imageHelper = $imageHelper;
-        $this->imageTemplateResolver = $imageTemplateResolver;
         parent::__construct($context, $data);
+        $this->initImageTemplateResolver();
+    }
+
+    /**
+     * Resolve optional AdvancedSEO dependency at runtime.
+     *
+     * @return void
+     */
+    private function initImageTemplateResolver(): void
+    {
+        $resolverClass = 'Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver';
+        if (class_exists($resolverClass)) {
+            try {
+                $this->imageTemplateResolver = ObjectManager::getInstance()->get($resolverClass);
+            } catch (\Throwable $e) {
+                $this->imageTemplateResolver = null;
+            }
+        }
     }
 
     /**
@@ -97,7 +111,7 @@ class Gallery extends AbstractProduct
      */
     public function getCurrentProduct()
     {
-        return $this->_coreRegistry->registry('current_product');
+        return $this->getProduct();
     }
 
     /**
@@ -131,8 +145,6 @@ class Gallery extends AbstractProduct
 
                 $rawLabel = (string) $image->getLabel();
                 $alt = $rawLabel !== '' ? $rawLabel : $productName;
-                // Upgrade empty, product-name-only, and the Luma
-                // sample-data placeholder "Image" to the SEO template.
                 if ($seoAlt !== ''
                     && ($rawLabel === ''
                         || $rawLabel === $productName
@@ -160,12 +172,10 @@ class Gallery extends AbstractProduct
                 ];
             }
 
-            // Sort by position
             usort($images, function ($a, $b) {
                 return $a['position'] <=> $b['position'];
             });
 
-            // Suffix multi-image alts so each one is distinct.
             if ($seoAlt !== '' && count($images) > 1) {
                 $total = count($images);
                 foreach ($images as $i => &$img) {
@@ -181,9 +191,7 @@ class Gallery extends AbstractProduct
     }
 
     /**
-     * Resolve SEO alt/title via the optionally injected template
-     * resolver. Returns ['', ''] when the resolver is absent or
-     * disabled so callers fall back to raw image labels.
+     * Resolve SEO alt/title via the optionally resolved template resolver.
      *
      * @param mixed $product
      * @return array{0:string,1:string}
@@ -194,7 +202,6 @@ class Gallery extends AbstractProduct
             return ['', ''];
         }
         try {
-            // Gallery-specific gate honors panth_seo/image/gallery_seo_enabled.
             if (method_exists($this->imageTemplateResolver, 'isGalleryEnabled')
                 && !$this->imageTemplateResolver->isGalleryEnabled()
             ) {

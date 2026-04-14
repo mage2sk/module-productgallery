@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Panth\ProductGallery\Plugin;
 
 use Magento\Catalog\Block\Product\View\Gallery as DefaultGallery;
-use Magento\Framework\Registry;
 use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Framework\App\ObjectManager;
 use Panth\Core\Helper\Theme;
 use Panth\ProductGallery\Helper\Data as ConfigHelper;
 use Panth\ProductGallery\ViewModel\Config as ConfigViewModel;
@@ -36,11 +36,6 @@ class HideDefaultGallery
     private ConfigViewModel $configViewModel;
 
     /**
-     * @var Registry
-     */
-    private Registry $registry;
-
-    /**
      * @var ImageHelper
      */
     private ImageHelper $imageHelper;
@@ -52,40 +47,43 @@ class HideDefaultGallery
 
     /**
      * Optional SEO image template resolver from Panth_AdvancedSEO.
-     * Uses mixed type to avoid ReflectionException when AdvancedSEO
-     * is not installed — the class is resolved at runtime via
-     * ObjectManager only when the module is present.
+     * Resolved at runtime via ObjectManager to avoid ReflectionException
+     * when AdvancedSEO is not installed.
      *
-     * @var mixed|null
+     * @var object|null
      */
-    private mixed $imageTemplateResolver = null;
+    private ?object $imageTemplateResolver = null;
 
     /**
      * @param ConfigHelper $configHelper
      * @param Theme $themeHelper
      * @param ConfigViewModel $configViewModel
-     * @param Registry $registry
      * @param ImageHelper $imageHelper
      */
     public function __construct(
         ConfigHelper $configHelper,
         Theme $themeHelper,
         ConfigViewModel $configViewModel,
-        Registry $registry,
         ImageHelper $imageHelper
     ) {
         $this->configHelper = $configHelper;
         $this->themeHelper = $themeHelper;
         $this->configViewModel = $configViewModel;
-        $this->registry = $registry;
         $this->imageHelper = $imageHelper;
+        $this->initImageTemplateResolver();
+    }
 
-        // Resolve optional AdvancedSEO dependency at runtime
+    /**
+     * Resolve optional AdvancedSEO dependency at runtime.
+     *
+     * @return void
+     */
+    private function initImageTemplateResolver(): void
+    {
         $resolverClass = 'Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver';
         if (class_exists($resolverClass)) {
             try {
-                $this->imageTemplateResolver = \Magento\Framework\App\ObjectManager::getInstance()
-                    ->get($resolverClass);
+                $this->imageTemplateResolver = ObjectManager::getInstance()->get($resolverClass);
             } catch (\Throwable $e) {
                 $this->imageTemplateResolver = null;
             }
@@ -111,8 +109,8 @@ class HideDefaultGallery
             return $result;
         }
 
-        $product = $this->registry->registry('current_product');
-        if (!$product) {
+        $product = $subject->getProduct();
+        if (!$product || !$product->getId()) {
             return $result;
         }
 
@@ -177,9 +175,6 @@ class HideDefaultGallery
             }
             $rawLabel = (string) $image->getLabel();
             $alt = $rawLabel !== '' ? $rawLabel : $productName;
-            // Upgrade empty labels, product-name-only labels, and the
-            // sample-data placeholder "Image" to the SEO template.
-            // Real merchant-set labels (anything else) are preserved.
             if ($seoAlt !== ''
                 && ($rawLabel === ''
                     || $rawLabel === $productName
@@ -207,8 +202,6 @@ class HideDefaultGallery
 
         usort($images, fn($a, $b) => $a['position'] <=> $b['position']);
 
-        // For multi-image galleries add a distinguishing position suffix
-        // to the SEO alt text so each image has a unique alt attribute.
         if ($seoAlt !== '' && count($images) > 1) {
             $total = count($images);
             foreach ($images as $i => &$img) {
@@ -223,10 +216,9 @@ class HideDefaultGallery
     }
 
     /**
-     * Resolve SEO alt/title via the optionally injected template
-     * resolver. Returns ['', ''] when the resolver is absent or
-     * disabled so the caller falls back to raw image labels.
+     * Resolve SEO alt/title via the optionally injected template resolver.
      *
+     * @param mixed $product
      * @return array{0:string,1:string}
      */
     private function resolveSeoAltTitle($product): array
@@ -235,9 +227,6 @@ class HideDefaultGallery
             return ['', ''];
         }
         try {
-            // Gating is driven by isGalleryEnabled() which implicitly
-            // returns false when the master image_seo_enabled flag is
-            // off or when gallery_seo_enabled is off.
             if (method_exists($this->imageTemplateResolver, 'isGalleryEnabled')
                 && !$this->imageTemplateResolver->isGalleryEnabled()
             ) {
@@ -255,5 +244,4 @@ class HideDefaultGallery
             return ['', ''];
         }
     }
-
 }
