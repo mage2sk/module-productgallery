@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ *
+ * Panth ProductGallery System Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="panth_productgallery" translate="label" sortOrder="142"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Product Gallery</label>
+            <tab>panth</tab>
+            <resource>Panth_ProductGallery::config</resource>
+
+            <!-- General Settings -->
+            <group id="general" translate="label comment" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <comment><![CDATA[Enable or disable the custom Product Gallery module. When enabled, this module replaces the default Magento product image gallery with a custom-styled gallery.]]></comment>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable the Product Gallery module</comment>
+                </field>
+            </group>
+
+            <!-- Layout Settings -->
+            <group id="layout" translate="label comment" sortOrder="20"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Gallery Layout</label>
+                <comment><![CDATA[Configure the gallery layout settings.]]></comment>
+
+                <field id="layout_type" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Thumbnail Layout</label>
+                    <source_model>Panth\ProductGallery\Model\Config\Source\LayoutType</source_model>
+                    <comment>How thumbnails are displayed relative to the main image</comment>
+                </field>
+            </group>
+
+            <!-- Zoom Settings -->
+            <group id="zoom" translate="label comment" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Zoom</label>
+                <comment><![CDATA[Configure the image zoom behavior on hover.]]></comment>
+
+                <field id="enable_zoom" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Zoom</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable inner zoom on hover over the main gallery image</comment>
+                </field>
+            </group>
+
+            <!-- Lightbox Settings -->
+            <group id="lightbox" translate="label comment" sortOrder="40"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Lightbox</label>
+                <comment><![CDATA[Configure the fullscreen lightbox gallery.]]></comment>
+
+                <field id="enable_lightbox" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Lightbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable fullscreen lightbox when clicking gallery images</comment>
+                </field>
+
+                <field id="show_counter" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Image Counter</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show "1 / 5" image counter in lightbox</comment>
+                    <depends>
+                        <field id="enable_lightbox">1</field>
+                    </depends>
+                </field>
+
+                <field id="enable_keyboard_nav" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Keyboard Navigation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable arrow key and Escape key navigation in lightbox</comment>
+                    <depends>
+                        <field id="enable_lightbox">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Navigation Settings -->
+            <group id="navigation" translate="label comment" sortOrder="50"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Navigation</label>
+                <comment><![CDATA[Configure gallery navigation behavior.]]></comment>
+
+                <field id="show_arrows" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Navigation Arrows</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show prev/next arrows on the main image</comment>
+                </field>
+
+                <field id="enable_swipe" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Swipe</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable touch swipe navigation on mobile devices</comment>
+                </field>
+
+                <field id="infinite_loop" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Infinite Loop</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Loop back to first image after reaching the last one</comment>
+                </field>
+            </group>
+
+            <!-- Design Note -->
+            <group id="design_note" translate="label comment" sortOrder="60"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Design &amp; Colors</label>
+                <comment><![CDATA[
+                    Gallery colors and styling are managed through the theme configuration file.<br/><br/>
+                    <strong>File:</strong> <code>app/code/Panth/ProductGallery/etc/theme-config.json</code><br/><br/>
+                    Available CSS variables: <code>--gallery-primary</code>, <code>--gallery-thumb-active-border</code>,
+                    <code>--gallery-zoom-bg</code>, <code>--gallery-lightbox-bg</code>, <code>--gallery-border-radius</code>, etc.
+                ]]></comment>
+            </group>
+        </section>
+    </system>
+</config>

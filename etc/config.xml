@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <panth_productgallery>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <layout>
+                <layout_type>horizontal</layout_type>
+                <thumb_position>bottom</thumb_position>
+                <main_image_width>700</main_image_width>
+                <main_image_height>700</main_image_height>
+                <thumb_width>72</thumb_width>
+                <thumb_height>72</thumb_height>
+                <visible_thumbs>5</visible_thumbs>
+            </layout>
+            <zoom>
+                <enable_zoom>1</enable_zoom>
+                <zoom_type>inner</zoom_type>
+                <zoom_level>3</zoom_level>
+            </zoom>
+            <lightbox>
+                <enable_lightbox>1</enable_lightbox>
+                <show_counter>1</show_counter>
+                <enable_keyboard_nav>1</enable_keyboard_nav>
+            </lightbox>
+            <navigation>
+                <show_arrows>1</show_arrows>
+                <enable_swipe>1</enable_swipe>
+                <infinite_loop>0</infinite_loop>
+            </navigation>
+        </panth_productgallery>
+    </default>
+</config>

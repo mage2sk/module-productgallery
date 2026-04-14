@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Panth_ProductGallery::group"
+             title="Product Gallery"
+             module="Panth_ProductGallery"
+             sortOrder="35"
+             parent="Panth_Core::panth_extensions"
+             resource="Panth_ProductGallery::config"/>
+        <add id="Panth_ProductGallery::settings"
+             title="Configuration"
+             module="Panth_ProductGallery"
+             sortOrder="10"
+             parent="Panth_ProductGallery::group"
+             action="adminhtml/system_config/edit/section/panth_productgallery"
+             resource="Panth_ProductGallery::config"/>
+    </menu>
+</config>

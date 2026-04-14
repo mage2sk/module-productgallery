@@ -1,0 +1,377 @@
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ *
+ * Panth ProductGallery — Luma Styles
+ * Uses CSS variables from theme-config.json for customizable colors.
+ * Units: px (not rem) per Panth design system.
+ * Font: DM Sans
+ */
+
+// ==========================================
+// Gallery Container
+// ==========================================
+
+.panth-gallery {
+    font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
+    margin: 24px 0 !important;
+    position: relative !important;
+}
+
+.panth-gallery--horizontal {
+    display: block !important;
+}
+
+.panth-gallery--vertical,
+.panth-gallery--horizontal.panth-gallery--thumb-left,
+.panth-gallery--horizontal.panth-gallery--thumb-right {
+    display: flex !important;
+    gap: 16px !important;
+}
+
+.panth-gallery--horizontal.panth-gallery--thumb-right {
+    flex-direction: row-reverse !important;
+}
+
+// ==========================================
+// Main Image
+// ==========================================
+
+.panth-gallery__main {
+    flex: 1 !important;
+}
+
+.panth-gallery__main-image {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: var(--gallery-border-radius, 8px) !important;
+    border: 1px solid var(--gallery-border, #E5E7EB) !important;
+    background: #F9FAFB !important;
+}
+
+.panth-gallery__main-image img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+// ==========================================
+// Navigation Arrows
+// ==========================================
+
+.panth-gallery__arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: var(--gallery-nav-size, 40px) !important;
+    height: var(--gallery-nav-size, 40px) !important;
+    border-radius: 50% !important;
+    background: var(--gallery-nav-bg, rgba(0,0,0,0.4)) !important;
+    color: var(--gallery-nav-color, #FFFFFF) !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s ease !important;
+    z-index: 5 !important;
+    padding: 0 !important;
+}
+
+.panth-gallery__arrow:hover {
+    background: var(--gallery-nav-hover-bg, rgba(0,0,0,0.7)) !important;
+}
+
+.panth-gallery__arrow--prev {
+    left: 8px !important;
+}
+
+.panth-gallery__arrow--next {
+    right: 8px !important;
+}
+
+.panth-gallery__arrow svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+// ==========================================
+// Thumbnails
+// ==========================================
+
+.panth-gallery__thumbs {
+    margin-top: 12px !important;
+}
+
+// Vertical layout thumbnails
+.panth-gallery--vertical .panth-gallery__thumbs,
+.panth-gallery--thumb-left .panth-gallery__thumbs,
+.panth-gallery--thumb-right .panth-gallery__thumbs {
+    margin-top: 0 !important;
+    max-height: 500px !important;
+    overflow-y: auto !important;
+    width: auto !important;
+}
+
+.panth-gallery__thumbs-track {
+    display: flex !important;
+    gap: var(--gallery-thumb-gap, 8px) !important;
+    overflow-x: auto !important;
+    padding-bottom: 4px !important;
+}
+
+.panth-gallery--vertical .panth-gallery__thumbs-track,
+.panth-gallery--thumb-left .panth-gallery__thumbs-track,
+.panth-gallery--thumb-right .panth-gallery__thumbs-track {
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+    padding-bottom: 0 !important;
+}
+
+.panth-gallery__thumb {
+    flex-shrink: 0 !important;
+    width: var(--gallery-thumb-size, 72px) !important;
+    height: var(--gallery-thumb-size, 72px) !important;
+    border: 2px solid var(--gallery-thumb-border, #E5E7EB) !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    background: #F9FAFB !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.panth-gallery__thumb:hover {
+    border-color: #9CA3AF !important;
+}
+
+.panth-gallery__thumb--active {
+    border-color: var(--gallery-thumb-active-border, #0D9488) !important;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2) !important;
+}
+
+.panth-gallery__thumb img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+// ==========================================
+// Grid Layout
+// ==========================================
+
+.panth-gallery--grid .panth-gallery__grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+}
+
+.panth-gallery--grid .panth-gallery__grid-item {
+    overflow: hidden !important;
+    border-radius: var(--gallery-border-radius, 8px) !important;
+    border: 1px solid var(--gallery-border, #E5E7EB) !important;
+    background: #F9FAFB !important;
+    cursor: pointer !important;
+}
+
+.panth-gallery--grid .panth-gallery__grid-item--main {
+    grid-column: span 2 !important;
+    grid-row: span 2 !important;
+}
+
+.panth-gallery--grid .panth-gallery__grid-item img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    transition: transform 0.3s ease !important;
+}
+
+.panth-gallery--grid .panth-gallery__grid-item:hover img {
+    transform: scale(1.05) !important;
+}
+
+// ==========================================
+// Zoom Overlay
+// ==========================================
+
+.panth-gallery__zoom-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-repeat: no-repeat !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    display: none !important;
+}
+
+.panth-gallery__zoom-lens {
+    position: absolute !important;
+    border: 2px solid var(--gallery-primary, #0D9488) !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    background-repeat: no-repeat !important;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2) !important;
+    display: none !important;
+}
+
+// ==========================================
+// Lightbox
+// ==========================================
+
+.panth-gallery__lightbox {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 9999 !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.panth-gallery__lightbox-backdrop {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: var(--gallery-lightbox-bg, rgba(0,0,0,0.9)) !important;
+}
+
+.panth-gallery__lightbox-content {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.panth-gallery__lightbox-img {
+    max-width: 90vw !important;
+    max-height: 85vh !important;
+    object-fit: contain !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.panth-gallery__lightbox-close {
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+    z-index: 10 !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,0.1) !important;
+    border: none !important;
+    color: var(--gallery-lightbox-close-color, #FFFFFF) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s ease !important;
+    padding: 0 !important;
+}
+
+.panth-gallery__lightbox-close:hover {
+    background: rgba(255,255,255,0.2) !important;
+}
+
+.panth-gallery__lightbox-counter {
+    position: absolute !important;
+    top: 16px !important;
+    left: 16px !important;
+    z-index: 10 !important;
+    color: rgba(255,255,255,0.8) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    font-family: 'DM Sans', 'Inter', system-ui, sans-serif !important;
+}
+
+.panth-gallery__lightbox-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10 !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,0.1) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s ease !important;
+    padding: 0 !important;
+}
+
+.panth-gallery__lightbox-arrow:hover {
+    background: rgba(255,255,255,0.2) !important;
+}
+
+.panth-gallery__lightbox-arrow--prev {
+    left: 16px !important;
+}
+
+.panth-gallery__lightbox-arrow--next {
+    right: 16px !important;
+}
+
+// ==========================================
+// Mobile Responsive
+// ==========================================
+
+@media (max-width: 767px) {
+    .panth-gallery--vertical,
+    .panth-gallery--horizontal.panth-gallery--thumb-left,
+    .panth-gallery--horizontal.panth-gallery--thumb-right {
+        flex-direction: column !important;
+    }
+
+    .panth-gallery--vertical .panth-gallery__thumbs,
+    .panth-gallery--thumb-left .panth-gallery__thumbs,
+    .panth-gallery--thumb-right .panth-gallery__thumbs {
+        max-height: none !important;
+        width: 100% !important;
+    }
+
+    .panth-gallery--vertical .panth-gallery__thumbs-track,
+    .panth-gallery--thumb-left .panth-gallery__thumbs-track,
+    .panth-gallery--thumb-right .panth-gallery__thumbs-track {
+        flex-direction: row !important;
+        overflow-x: auto !important;
+    }
+
+    .panth-gallery__arrow {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .panth-gallery__arrow svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .panth-gallery--grid .panth-gallery__grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .panth-gallery--grid .panth-gallery__grid-item--main {
+        grid-column: span 2 !important;
+        grid-row: span 1 !important;
+    }
+
+    .panth-gallery__lightbox-arrow {
+        width: 36px !important;
+        height: 36px !important;
+    }
+}

@@ -1,0 +1,313 @@
+<?php
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ *
+ * Product Gallery — Luma Template
+ * Vanilla JS, no Alpine.js
+ *
+ * @var \Panth\ProductGallery\Block\Gallery $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Panth\ProductGallery\ViewModel\Config $viewModel
+ */
+
+// Support both: direct variables from plugin OR block-based rendering
+if (!isset($viewModel)) {
+    $viewModel = $block->getData('view_model');
+}
+if (!$viewModel instanceof \Panth\ProductGallery\ViewModel\Config) {
+    return;
+}
+if (!isset($images) || empty($images)) {
+    $images = method_exists($block, 'getGalleryImages') ? $block->getGalleryImages() : [];
+}
+if (empty($images)) {
+    return;
+}
+if (!isset($config)) {
+    $config = $viewModel->getGalleryConfig();
+}
+$layoutType = $escaper->escapeHtmlAttr($config['layout_type'] ?? 'horizontal');
+$thumbPosition = 'bottom';
+$mainWidth = 700;
+$mainHeight = 700;
+$thumbWidth = 72;
+$thumbHeight = 72;
+$enableZoom = (bool) ($config['enable_zoom'] ?? true);
+$zoomLevel = (int) ($config['zoom_level'] ?? 3);
+$enableLightbox = (bool) ($config['enable_lightbox'] ?? true);
+$showCounter = (bool) ($config['show_counter'] ?? true);
+$enableKeyboardNav = (bool) ($config['enable_keyboard_nav'] ?? true);
+$showArrows = (bool) ($config['show_arrows'] ?? true);
+$infiniteLoop = (bool) ($config['infinite_loop'] ?? false);
+
+$galleryId = 'panth-gallery-' . uniqid();
+$configJson = $escaper->escapeHtmlAttr(json_encode([
+    'layoutType' => $layoutType,
+    'enableZoom' => $enableZoom,
+    'zoomLevel' => $zoomLevel,
+    'enableLightbox' => $enableLightbox,
+    'showCounter' => $showCounter,
+    'enableKeyboardNav' => $enableKeyboardNav,
+    'showArrows' => $showArrows,
+    'infiniteLoop' => $infiniteLoop,
+]));
+
+$layoutClass = 'panth-gallery--' . $layoutType;
+if ($layoutType !== 'grid') {
+    $layoutClass .= ' panth-gallery--thumb-bottom';
+}
+?>
+
+<style>
+.panth-gallery { position: relative; }
+.panth-gallery__main { position: relative; }
+.panth-gallery__main-image { position: relative; }
+.panth-gallery__main-image img { display: block; width: 100%; height: auto; }
+.panth-gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.2s; padding: 0; }
+.panth-gallery__arrow:hover { background: rgba(0,0,0,0.7); }
+.panth-gallery__arrow--prev { left: 8px; }
+.panth-gallery__arrow--next { right: 8px; }
+.panth-gallery__arrow svg { width: 20px; height: 20px; }
+.panth-gallery__thumbs { margin-top: 12px; margin-bottom: 20px; }
+.panth-gallery__thumbs-track { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; }
+.panth-gallery__thumb { flex-shrink: 0; border-radius: 8px; overflow: hidden; border: 2px solid #9CA3AF; background: #fff; padding: 3px; cursor: pointer; transition: all 0.2s; }
+.panth-gallery__thumb:hover { border-color: #6B7280; }
+.panth-gallery__thumb--active { border-color: var(--color-primary, #0D9488) !important; box-shadow: 0 0 0 2px rgba(13,148,136,0.2); }
+.panth-gallery__thumb img { display: block; object-fit: contain; background: #F9FAFB; }
+.panth-gallery__lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; }
+.panth-gallery__lightbox-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.93); }
+.panth-gallery__lightbox-content { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.panth-gallery__lightbox-close { position: fixed; top: 16px; right: 16px; z-index: 999999; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.panth-gallery__lightbox-close:hover { background: rgba(255,255,255,0.3); }
+.panth-gallery__lightbox-counter { position: fixed; top: 20px; left: 20px; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 600; z-index: 999999; }
+.panth-gallery__lightbox-arrow { position: fixed; top: 50%; transform: translateY(-50%); z-index: 999999; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.panth-gallery__lightbox-arrow:hover { background: rgba(255,255,255,0.3); }
+.panth-gallery__lightbox-arrow--prev { left: 16px; }
+.panth-gallery__lightbox-arrow--next { right: 16px; }
+.panth-gallery__lightbox-img { max-width: 85vw; max-height: 85vh; object-fit: contain; transition: transform 0.3s; }
+</style>
+
+<div class="panth-gallery <?= /* @noEscape */ $layoutClass ?>"
+     id="<?= $escaper->escapeHtmlAttr($galleryId) ?>"
+     data-gallery-config="<?= /* @noEscape */ $configJson ?>">
+
+    <!-- Main Image -->
+    <div class="panth-gallery__main" id="gallery">
+        <div class="panth-gallery__main-image" style="max-width:100%;position:relative;border:1px solid #E5E7EB;border-radius:8px;background-color:#F3F4F6;">
+            <img src="<?= $escaper->escapeUrl($images[0]['medium']) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($images[0]['alt']) ?>"
+                 id="<?= $escaper->escapeHtmlAttr($galleryId) ?>-main-img"
+                 loading="eager"
+                 style="display:block;width:100%;height:auto;<?= $enableLightbox ? 'cursor:pointer;' : '' ?>"
+            />
+
+            <?php if ($showArrows && count($images) > 1): ?>
+                <button type="button" class="panth-gallery__arrow panth-gallery__arrow--prev"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Previous image')) ?>">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <button type="button" class="panth-gallery__arrow panth-gallery__arrow--next"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Next image')) ?>">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            <?php endif; ?>
+
+        </div>
+    </div>
+
+    <!-- Thumbnails -->
+    <?php if (count($images) > 1): ?>
+        <div class="panth-gallery__thumbs">
+            <div class="panth-gallery__thumbs-track">
+                <?php foreach ($images as $index => $image): ?>
+                    <button type="button"
+                            class="panth-gallery__thumb <?= $index === 0 ? 'panth-gallery__thumb--active' : '' ?>"
+                            data-index="<?= (int) $index ?>"
+                            data-medium="<?= $escaper->escapeUrl($image['medium']) ?>"
+                            data-large="<?= $escaper->escapeUrl($image['large']) ?>"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('View image %1', $index + 1)) ?>">
+                        <img src="<?= $escaper->escapeUrl($image['thumb']) ?>"
+                             alt="<?= $escaper->escapeHtmlAttr($image['alt']) ?>"
+                             width="<?= $escaper->escapeHtmlAttr((string) $thumbWidth) ?>"
+                             height="<?= $escaper->escapeHtmlAttr((string) $thumbHeight) ?>"
+                             loading="lazy" />
+                    </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+
+    var galleryId = '<?= /* @noEscape */ $galleryId ?>';
+    var gallery = document.getElementById(galleryId);
+    if (!gallery) return;
+
+    var config = JSON.parse(gallery.getAttribute('data-gallery-config') || '{}');
+    var images = <?= /* @noEscape */ json_encode(array_map(function ($img) {
+        return ['medium' => $img['medium'], 'large' => $img['large'], 'alt' => $img['alt']];
+    }, $images)) ?>;
+
+    var currentIndex = 0, totalImages = images.length;
+    var mainImg = document.getElementById(galleryId + '-main-img');
+    var thumbs = gallery.querySelectorAll('.panth-gallery__thumb');
+
+    thumbs.forEach(function(thumb) {
+        thumb.addEventListener('click', function() {
+            goToImage(parseInt(this.getAttribute('data-index')));
+        });
+    });
+
+    var prevBtn = gallery.querySelector('.panth-gallery__arrow--prev');
+    var nextBtn = gallery.querySelector('.panth-gallery__arrow--next');
+    if (prevBtn) prevBtn.addEventListener('click', function() {
+        var n = currentIndex - 1;
+        goToImage(config.infiniteLoop ? (n < 0 ? totalImages - 1 : n) : Math.max(0, n));
+    });
+    if (nextBtn) nextBtn.addEventListener('click', function() {
+        var n = currentIndex + 1;
+        goToImage(config.infiniteLoop ? (n >= totalImages ? 0 : n) : Math.min(totalImages - 1, n));
+    });
+
+    function goToImage(index) {
+        if (index < 0 || index >= totalImages) return;
+        currentIndex = index;
+        if (mainImg) { mainImg.src = images[index].medium; mainImg.alt = images[index].alt; }
+        thumbs.forEach(function(t) { t.classList.remove('panth-gallery__thumb--active'); });
+        if (thumbs[index]) {
+            thumbs[index].classList.add('panth-gallery__thumb--active');
+            thumbs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }
+
+    // Inner zoom on hover — scale the image with transform-origin following cursor
+    <?php if ($enableZoom): ?>
+    (function() {
+        var mainWrap = gallery.querySelector('.panth-gallery__main-image');
+        if (!mainWrap || !mainImg) return;
+        var zoomLevel = <?= (int)$zoomLevel ?>;
+        var zooming = false;
+
+        // Preload large image and swap on first hover
+        mainWrap.addEventListener('mouseenter', function() {
+            if (!zooming) {
+                mainImg.dataset.mediumSrc = mainImg.src;
+                mainImg.src = images[currentIndex].large;
+            }
+            zooming = true;
+            mainWrap.style.overflow = 'hidden';
+            mainWrap.style.cursor = 'crosshair';
+        });
+
+        mainWrap.addEventListener('mousemove', function(e) {
+            var rect = mainWrap.getBoundingClientRect();
+            var x = (e.clientX - rect.left) / rect.width * 100;
+            var y = (e.clientY - rect.top) / rect.height * 100;
+            mainImg.style.transform = 'scale(' + zoomLevel + ')';
+            mainImg.style.transformOrigin = x + '% ' + y + '%';
+        });
+
+        mainWrap.addEventListener('mouseleave', function() {
+            zooming = false;
+            mainImg.style.transform = 'scale(1)';
+            mainImg.style.transformOrigin = 'center center';
+            mainImg.src = images[currentIndex].medium;
+            mainWrap.style.overflow = '';
+            mainWrap.style.cursor = '<?= $enableLightbox ? 'pointer' : 'default' ?>';
+        });
+    })();
+    <?php endif; ?>
+
+    // Lightbox (created on body to avoid stacking issues)
+    <?php if ($enableLightbox): ?>
+    (function() {
+        var lb = null, lbImg = null, lbCounter = null, lbIdx = 0, lbZoom = 1;
+
+        function createLb() {
+            lb = document.createElement('div');
+            lb.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:999999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.93);';
+
+            <?php if ($showCounter): ?>
+            lbCounter = document.createElement('div');
+            lbCounter.style.cssText = 'position:fixed;top:20px;left:20px;color:rgba(255,255,255,0.85);font-size:14px;font-weight:600;z-index:999999;';
+            lb.appendChild(lbCounter);
+            <?php endif; ?>
+
+            var controls = document.createElement('div');
+            controls.style.cssText = 'position:fixed;top:16px;right:16px;z-index:999999;display:flex;gap:8px;';
+            controls.appendChild(mkBtn('<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>', function() { lbZoom = Math.min(5, lbZoom + 0.5); applyLbZoom(); }));
+            controls.appendChild(mkBtn('<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/></svg>', function() { lbZoom = Math.max(0.5, lbZoom - 0.5); applyLbZoom(); }));
+            controls.appendChild(mkBtn('<svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>', closeLb));
+            lb.appendChild(controls);
+
+            lb.appendChild(mkBtn('<svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>', prevLb, 'position:fixed;left:16px;top:50%;transform:translateY(-50%);'));
+            lb.appendChild(mkBtn('<svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>', nextLb, 'position:fixed;right:16px;top:50%;transform:translateY(-50%);'));
+
+            lbImg = document.createElement('img');
+            lbImg.style.cssText = 'max-width:85vw;max-height:85vh;object-fit:contain;position:relative;z-index:1;transition:transform 0.3s;';
+            lbImg.draggable = false;
+            lb.appendChild(lbImg);
+
+            lb.addEventListener('click', function(e) { if (e.target === lb) closeLb(); });
+            lb.addEventListener('wheel', function(e) { e.preventDefault(); if (e.deltaY < 0) { lbZoom = Math.min(5, lbZoom + 0.5); } else { lbZoom = Math.max(0.5, lbZoom - 0.5); } applyLbZoom(); }, { passive: false });
+
+            <?php if ($enableKeyboardNav): ?>
+            document.addEventListener('keydown', function(e) {
+                if (!lb || lb.style.display !== 'flex') return;
+                if (e.key === 'Escape') closeLb();
+                if (e.key === 'ArrowLeft') prevLb();
+                if (e.key === 'ArrowRight') nextLb();
+                if (e.key === '+' || e.key === '=') { lbZoom = Math.min(5, lbZoom + 0.5); applyLbZoom(); }
+                if (e.key === '-') { lbZoom = Math.max(0.5, lbZoom - 0.5); applyLbZoom(); }
+            });
+            <?php endif; ?>
+
+            document.body.appendChild(lb);
+        }
+
+        function mkBtn(svg, onClick, extraStyle) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.style.cssText = (extraStyle || 'position:relative;') + 'z-index:999999;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;';
+            b.innerHTML = svg;
+            b.onmouseenter = function() { b.style.background = 'rgba(255,255,255,0.3)'; };
+            b.onmouseleave = function() { b.style.background = 'rgba(255,255,255,0.15)'; };
+            b.onclick = function(e) { e.stopPropagation(); onClick(); };
+            return b;
+        }
+
+        function applyLbZoom() { if (lbImg) lbImg.style.transform = 'scale(' + lbZoom + ')'; }
+        function updateLb() { lbImg.src = images[lbIdx].large; lbImg.alt = images[lbIdx].alt; lbZoom = 1; applyLbZoom(); if (lbCounter) lbCounter.textContent = (lbIdx + 1) + ' / ' + totalImages; }
+        function openLb(index) { if (!lb) createLb(); lbIdx = index; updateLb(); lb.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        function closeLb() { if (lb) lb.style.display = 'none'; document.body.style.overflow = ''; lbZoom = 1; }
+        function prevLb() { lbIdx = lbIdx <= 0 ? totalImages - 1 : lbIdx - 1; updateLb(); }
+        function nextLb() { lbIdx = lbIdx >= totalImages - 1 ? 0 : lbIdx + 1; updateLb(); }
+
+        if (mainImg) mainImg.addEventListener('click', function() { openLb(currentIndex); });
+    })();
+    <?php endif; ?>
+
+    // Touch swipe
+    (function() {
+        var startX = 0;
+        var mainWrap = gallery.querySelector('.panth-gallery__main-image') || gallery;
+        mainWrap.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+        mainWrap.addEventListener('touchend', function(e) {
+            var diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                var n = diff > 0 ? currentIndex + 1 : currentIndex - 1;
+                if (config.infiniteLoop) n = n < 0 ? totalImages - 1 : (n >= totalImages ? 0 : n);
+                else n = Math.max(0, Math.min(totalImages - 1, n));
+                goToImage(n);
+            }
+        }, { passive: true });
+    })();
+});
+</script>
