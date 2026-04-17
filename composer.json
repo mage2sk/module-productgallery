@@ -2,7 +2,7 @@
   "name": "mage2kishan/module-productgallery",
   "description": "Custom product image gallery for Magento 2 product detail pages. Features configurable thumbnail layouts (horizontal, vertical, grid), image zoom (inner/lens), fullscreen lightbox, and responsive navigation. Compatible with Hyva and Luma themes.",
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "proprietary",
   "authors": [
     {
