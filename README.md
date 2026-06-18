@@ -1,32 +1,49 @@
 <!-- SEO Meta -->
 <!--
-  Title: Custom Product Image Gallery for Magento 2 | Zoom, Lightbox & Thumbnail Layouts | Panth Infotech
-  Description: Panth Product Gallery for Magento 2 — configurable thumbnail layouts (horizontal, vertical, grid), inner zoom and lens zoom, fullscreen lightbox, responsive navigation, full Hyva + Luma support, and optional integration with Panth Advanced SEO for automatic image alt text. Compatible with Magento 2.4.4 - 2.4.8 and PHP 8.1 - 8.4.
-  Keywords: magento 2 product gallery, magento 2 image zoom, magento 2 lightbox, magento 2 product images, magento 2 gallery widget, magento 2 thumbnail layout, hyva product gallery, luma product gallery
+  Title: Magento 2 Product Gallery Extension: Zoom, Lightbox and Thumbnail Layouts | Hyva + Luma | Panth Infotech
+  Description: Panth Product Gallery for Magento 2 replaces the default product image gallery with configurable thumbnail layouts (horizontal, vertical, grid), inner zoom on hover, a fullscreen lightbox with keyboard navigation, touch swipe, and prev/next arrow controls. Native Hyva (Alpine.js) and Luma templates. Works on Magento 2.4.4 to 2.4.8 and PHP 8.1 to 8.4. Built by Top Rated Plus Magento developer Kishan Savaliya.
+  Keywords: magento 2 product gallery, magento 2 image zoom, magento 2 lightbox, magento 2 thumbnail layout, hyva product gallery, luma product gallery, magento 2 product image zoom, magento 2 gallery extension, magento 2 fullscreen lightbox, magento 2 product page gallery
   Author: Kishan Savaliya (Panth Infotech)
-  Canonical: https://github.com/mage2sk/module-productgallery
+  Canonical: https://kishansavaliya.com/magento-2-productgallery.html
 -->
 
-# Custom Product Image Gallery for Magento 2 | Panth Product Gallery
+# Magento 2 Product Gallery Extension: Zoom, Lightbox and Thumbnail Layouts (Hyva + Luma)
 
 [![Magento 2.4.4 - 2.4.8](https://img.shields.io/badge/Magento-2.4.4%20--%202.4.8-orange?logo=magento&logoColor=white)](https://magento.com)
 [![PHP 8.1 - 8.4](https://img.shields.io/badge/PHP-8.1%20--%208.4-blue?logo=php&logoColor=white)](https://php.net)
-[![Hyva + Luma](https://img.shields.io/badge/Themes-Hyva%20%2B%20Luma-14b8a6)]()
+[![Hyva + Luma](https://img.shields.io/badge/Themes-Hyva%20%2B%20Luma-14b8a6)](https://www.hyva.io)
+[![Live Demo & Details](https://img.shields.io/badge/Live%20Demo%20%26%20Details-magento--2--productgallery-0D9488?style=flat)](https://kishansavaliya.com/magento-2-productgallery.html)
 [![Packagist](https://img.shields.io/badge/Packagist-mage2kishan%2Fmodule--productgallery-orange?logo=packagist&logoColor=white)](https://packagist.org/packages/mage2kishan/module-productgallery)
 [![Upwork Top Rated Plus](https://img.shields.io/badge/Upwork-Top%20Rated%20Plus-14a800?logo=upwork&logoColor=white)](https://www.upwork.com/freelancers/~016dd1767321100e21)
-[![Panth Infotech Agency](https://img.shields.io/badge/Agency-Panth%20Infotech-14a800?logo=upwork&logoColor=white)](https://www.upwork.com/agencies/1881421506131960778/)
 [![Website](https://img.shields.io/badge/Website-kishansavaliya.com-0D9488)](https://kishansavaliya.com)
-[![Get a Quote](https://img.shields.io/badge/Get%20a%20Quote-Free%20Estimate-DC2626)](https://kishansavaliya.com/get-quote)
 
-> **Custom Product Image Gallery for Magento 2** — replace the default product media gallery with a fast, configurable gallery supporting horizontal, vertical and grid thumbnail layouts, inner and lens image zoom, fullscreen lightbox, responsive navigation, full Hyva and Luma compatibility, and an optional soft dependency on Panth Advanced SEO for automatic image alt-text generation.
+> **Replace the default Magento product gallery with a fully configurable one.** Panth Product Gallery adds horizontal, vertical, and grid thumbnail layouts, inner zoom on hover, a fullscreen lightbox, touch swipe navigation, and keyboard controls to the product detail page. Native templates for **Hyva (Alpine.js)** and **Luma** are both included.
 
-**Panth Product Gallery** gives merchants total control over how product images are presented on the product detail page. Choose between **horizontal thumbnails** (classic below-main-image strip), **vertical thumbnails** (side rail on desktop, strip on mobile), or a **grid layout** (Amazon/Etsy style). Enable **inner zoom** for hover magnification directly inside the main image, **lens zoom** for a floating magnifier window, or a **fullscreen lightbox** that opens the full-resolution image with swipe and keyboard navigation. Everything is responsive, touch-friendly, and tuned for Core Web Vitals on both **Hyva** (Alpine.js + Tailwind) and **Luma** (Knockout.js) storefronts. When **Panth Advanced SEO** is installed, the gallery automatically pulls AI-generated alt text into every `<img>` tag for better accessibility and SEO.
+**Product page:** [kishansavaliya.com/magento-2-productgallery.html](https://kishansavaliya.com/magento-2-productgallery.html)
 
 ---
 
-## 🚀 Need Custom Magento 2 Gallery or Product Page Work?
+## Quick Answer
 
-> **Get a free quote for your project in 24 hours** — custom gallery layouts, PDP redesigns, Hyva migration, performance optimization, and Adobe Commerce Cloud.
+**What is Panth Product Gallery?** It is a Magento 2 product gallery extension that replaces the default product image gallery on the product detail page with a configurable gallery offering three thumbnail layouts, inner zoom, a fullscreen lightbox, and touch swipe navigation.
+
+**What does it add to my store?**
+
+- A choice of **three thumbnail layouts**: horizontal (strip below the main image), vertical (side rail), or grid (all images visible at once).
+- **Inner zoom on hover** so shoppers can examine product details without leaving the page.
+- A **fullscreen lightbox** with keyboard navigation (arrow keys, Escape), image counter, and touch support.
+- **Swipe and arrow navigation** so visitors can browse images on any device.
+- **Optional alt text integration** with Panth Advanced SEO for automatic image alt text.
+
+**Which themes are supported?** Both **Hyva** (Alpine.js, no jQuery) and **Luma**. The correct template is picked automatically based on the active theme.
+
+**What does it need?** Magento 2.4.4 to 2.4.8, PHP 8.1 to 8.4, and the free `mage2kishan/module-core` package.
+
+---
+
+## Need Custom Magento 2 Development?
+
+> **Get a free quote for your project in 24 hours** for custom modules, Hyva themes, performance work, M1 to M2 migrations, and Adobe Commerce Cloud.
 
 <p align="center">
   <a href="https://kishansavaliya.com/get-quote">
@@ -38,7 +55,7 @@
 <tr>
 <td width="50%" align="center">
 
-### 🏆 Kishan Savaliya
+### Kishan Savaliya
 **Top Rated Plus on Upwork**
 
 [![Hire on Upwork](https://img.shields.io/badge/Hire%20on%20Upwork-Top%20Rated%20Plus-14a800?style=for-the-badge&logo=upwork&logoColor=white)](https://www.upwork.com/freelancers/~016dd1767321100e21)
@@ -49,7 +66,7 @@ Adobe Certified • Hyva Specialist
 </td>
 <td width="50%" align="center">
 
-### 🏢 Panth Infotech Agency
+### Panth Infotech Agency
 **Magento Development Team**
 
 [![Visit Agency](https://img.shields.io/badge/Visit%20Agency-Panth%20Infotech-14a800?style=for-the-badge&logo=upwork&logoColor=white)](https://www.upwork.com/agencies/1881421506131960778/)
@@ -67,11 +84,12 @@ Performance • SEO • Adobe Commerce Cloud
 
 ## Table of Contents
 
+- [Who Is It For](#who-is-it-for)
 - [Key Features](#key-features)
 - [Compatibility](#compatibility)
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Advanced SEO Integration](#advanced-seo-integration)
+- [How It Works](#how-it-works)
 - [FAQ](#faq)
 - [Support](#support)
 - [About Panth Infotech](#about-panth-infotech)
@@ -79,53 +97,50 @@ Performance • SEO • Adobe Commerce Cloud
 
 ---
 
+## Who Is It For
+
+- **Fashion, furniture, and home goods stores** where shoppers need to see multiple images and zoom in on details before buying.
+- **Stores on Hyva** that want a gallery built with Alpine.js and no jQuery dependency.
+- **Merchants frustrated with the default gallery** who want real layout choices without custom coding.
+- **Stores where mobile traffic is high** and touch swipe between images matters.
+- **Anyone using Panth Advanced SEO** who wants automatic image alt text applied to every gallery image.
+
+---
+
 ## Key Features
 
 ### Configurable Thumbnail Layouts
+- **Horizontal layout** strips thumbnails below the main image (classic style).
+- **Vertical layout** places thumbnails on a side rail on desktop, collapsing to a horizontal strip on mobile.
+- **Grid layout** shows all images at once in a multi-column grid, similar to Amazon or Etsy.
+- **Automatic theme detection** via `Panth_Core` serves the right template for Hyva or Luma.
 
-- **Horizontal layout** — traditional strip of thumbnails below the main image
-- **Vertical layout** — thumbnails on the side rail (desktop), collapsing to a horizontal strip on mobile
-- **Grid layout** — Amazon/Etsy-style multi-column grid showing all images at once
-- **Thumbnail count & size** — configurable number of visible thumbnails and pixel dimensions
-- **Active state styling** — border, shadow, and scale transitions for the selected thumbnail
+### Image Zoom
+- **Inner zoom on hover** magnifies the image in place with no overlay, configurable zoom level.
+- **Large image preloading** starts on first hover so zoom quality is immediate.
 
-### Image Zoom Modes
+### Fullscreen Lightbox
+- **Click to open** the full-resolution image in a modal.
+- **Image counter** shows the current position ("1 / 5") inside the lightbox.
+- **Keyboard navigation** with arrow keys to move between images and Escape to close.
+- **Touch swipe** inside the lightbox for mobile visitors.
 
-- **Inner zoom** — magnify the image in place on hover, no overlay required
-- **Lens zoom** — floating magnifier lens with a side preview window
-- **Fullscreen lightbox** — click to open the full-resolution image in a modal with swipe, pinch-zoom, and keyboard navigation
-- **Zoom level control** — adjustable zoom factor (1.5x to 4x)
-- **Touch-friendly** — pinch-zoom and swipe gestures on mobile and tablet
+### Navigation Controls
+- **Prev/next arrows** on the main image for quick browsing.
+- **Touch swipe navigation** on the main image area on mobile devices.
+- **Infinite loop** option so the gallery wraps from the last image back to the first.
 
-### Responsive Navigation
+### SEO and Accessibility
+- **Proper alt and title attributes** on every image.
+- **Optional integration** with Panth Advanced SEO for template-based image alt text with per-image position suffixes.
+- **Semantic HTML** with correct image attributes.
 
-- Prev/next arrows with keyboard support (arrow keys, Escape to close)
-- Dot indicators and image counter (e.g. "3 / 12")
-- Swipe navigation on touch devices
-- Auto-slide option with configurable interval
-- Infinite loop or stop-at-ends behaviour
-
-### Theme Support
-
-- **Hyva compatible** — Alpine.js components, Tailwind CSS utility classes, no jQuery
-- **Luma compatible** — Knockout.js bindings that cleanly replace the default `gallery.phtml`
-- **Automatic theme detection** — via `Panth\Core\Helper\Theme`, the correct template is served without any manual switching
-- **Child-theme safe** — templates can be overridden from your own custom theme
-
-### SEO & Accessibility
-
-- **Alt text from Panth Advanced SEO** — optional soft dependency; when installed, every image pulls its AI-generated alt text automatically
-- **Semantic HTML** — proper `<figure>`, `<img>`, `aria-label`, and `role` attributes
-- **Keyboard navigable** — full keyboard support (Tab, Enter, arrows, Escape)
-- **Lazy loading** — `loading="lazy"` and `decoding="async"` on non-primary images
-- **Structured image URLs** — preserves Magento media paths for CDN compatibility
-
-### Performance
-
-- **No jQuery on Hyva** — pure Alpine.js, minimal JS payload
-- **CSS-only transitions** where possible — hardware-accelerated transforms
-- **Lazy-loaded thumbnails** — off-screen thumbs defer loading
-- **Optimized for Core Web Vitals** — minimal CLS, fast LCP on the main image
+### Built to Last
+- **Plugin-based gallery replacement** via an `afterToHtml` plugin, so no layout XML overrides are needed.
+- **Observer for product collections** to include media gallery data when the module is active.
+- **Admin configuration scoped per store view**.
+- **Translation ready**, all labels use Magento's `__()` function.
+- **Widget support** to embed the gallery on any CMS page or block.
 
 ---
 
@@ -135,17 +150,12 @@ Performance • SEO • Adobe Commerce Cloud
 |---|---|
 | Magento Open Source | 2.4.4, 2.4.5, 2.4.6, 2.4.7, 2.4.8 |
 | Adobe Commerce | 2.4.4, 2.4.5, 2.4.6, 2.4.7, 2.4.8 |
-| Adobe Commerce Cloud | 2.4.4 — 2.4.8 |
+| Adobe Commerce Cloud | 2.4.4 to 2.4.8 |
 | PHP | 8.1.x, 8.2.x, 8.3.x, 8.4.x |
-| Hyva Theme | 1.3+ (fully supported) |
+| Hyva Theme | 1.3+ (native Alpine.js support) |
 | Luma Theme | Native support |
-| Panth_Core | Required (free) |
-| Panth_AdvancedSEO | Optional (soft dependency for alt text) |
-
-Tested on:
-- Magento 2.4.8-p4 with PHP 8.4 (Hyva 1.3.x)
-- Magento 2.4.7 with PHP 8.3 (Luma)
-- Magento 2.4.6 with PHP 8.2
+| Required Dependency | `mage2kishan/module-core` (free) |
+| Optional Dependency | `mage2kishan/module-advanced-seo` (for auto alt text) |
 
 ---
 
@@ -164,18 +174,19 @@ bin/magento cache:flush
 
 ### Manual Installation via ZIP
 
-1. Download the latest release ZIP from [Packagist](https://packagist.org/packages/mage2kishan/module-productgallery) or the [Adobe Commerce Marketplace](https://commercemarketplace.adobe.com)
-2. Extract the contents to `app/code/Panth/ProductGallery/` in your Magento installation
-3. Run the same commands as above starting from `bin/magento module:enable`
+1. Download the latest release from [Packagist](https://packagist.org/packages/mage2kishan/module-productgallery) or from the [product page](https://kishansavaliya.com/magento-2-productgallery.html).
+2. Extract it to `app/code/Panth/ProductGallery/` in your Magento install.
+3. Make sure `Panth_Core` is installed too (required dependency).
+4. Run the commands above starting from `bin/magento module:enable`.
 
 ### Verify Installation
 
 ```bash
 bin/magento module:status Panth_ProductGallery
-# Expected output: Module is enabled
+# Expected: Module is enabled
 ```
 
-After installation, navigate to:
+After install, open:
 ```
 Admin → Stores → Configuration → Panth Extensions → Product Gallery
 ```
@@ -184,80 +195,62 @@ Admin → Stores → Configuration → Panth Extensions → Product Gallery
 
 ## Configuration
 
-All settings live at `Stores → Configuration → Panth Extensions → Product Gallery`.
+Go to **Stores → Configuration → Panth Extensions → Product Gallery**.
 
-### General
+| Setting | Group | Default | Description |
+|---|---|---|---|
+| Enable Module | General Settings | Yes | Master toggle. Disable to fall back to the default Magento gallery. |
+| Thumbnail Layout | Gallery Layout | Horizontal | Choose Horizontal, Vertical, or Grid. |
+| Enable Zoom | Zoom | Yes | Enable inner zoom on hover over the main gallery image. |
+| Enable Lightbox | Lightbox | Yes | Enable the fullscreen lightbox when clicking gallery images. |
+| Show Image Counter | Lightbox | Yes | Show "1 / 5" image counter inside the lightbox (only when lightbox is enabled). |
+| Keyboard Navigation | Lightbox | Yes | Enable arrow key and Escape navigation inside the lightbox (only when lightbox is enabled). |
+| Show Navigation Arrows | Navigation | Yes | Show prev/next arrows on the main image. |
+| Enable Swipe | Navigation | Yes | Enable touch swipe navigation on mobile devices. |
+| Infinite Loop | Navigation | No | Loop back to the first image after the last one. |
 
-| Setting | Default | Description |
-|---|---|---|
-| Enable Module | Yes | Master toggle for the custom gallery. Disable to fall back to Magento's default gallery. |
-| Thumbnail Layout | Horizontal | Choose `Horizontal`, `Vertical`, or `Grid`. |
-| Thumbnail Count | 5 | Visible thumbnails before scrolling (horizontal/vertical). |
-| Thumbnail Size | 80px | Pixel dimensions for each thumbnail. |
-
-### Zoom
-
-| Setting | Default | Description |
-|---|---|---|
-| Zoom Mode | Inner | Choose `Inner`, `Lens`, `Lightbox`, or `Disabled`. |
-| Zoom Level | 2.0x | Magnification factor (1.5x - 4x). |
-| Enable Fullscreen Lightbox | Yes | Click to open the full-size image in a modal. |
-| Enable Pinch Zoom (mobile) | Yes | Pinch-to-zoom inside the lightbox. |
-
-### Navigation
-
-| Setting | Default | Description |
-|---|---|---|
-| Show Prev/Next Arrows | Yes | Display navigation arrows on the main image. |
-| Show Dot Indicators | No | Show a row of dot indicators below the main image. |
-| Show Image Counter | Yes | Show "3 / 12" counter overlay. |
-| Enable Keyboard Navigation | Yes | Arrow keys, Escape, Enter. |
-| Enable Auto-Slide | No | Auto-advance the main image. |
-| Auto-Slide Interval | 5s | Seconds between slides when auto-slide is on. |
+Gallery colors and border radius are controlled via CSS variables in the theme config file rather than admin settings.
 
 ---
 
-## Advanced SEO Integration
+## How It Works
 
-Panth Product Gallery has a **soft dependency** on [Panth Advanced SEO](https://packagist.org/packages/mage2kishan/module-advanced-seo). When Advanced SEO is installed and enabled, the gallery automatically uses its AI-generated image alt text for every `<img>` tag — no manual alt text management required.
-
-Without Advanced SEO, the gallery falls back to Magento's standard image label / product name pattern. You can still use the gallery fully without installing Advanced SEO; the integration is purely additive.
+1. When the module is enabled, an **afterToHtml plugin** intercepts the default gallery block output and replaces it with the Panth gallery template.
+2. The module auto-detects the active theme through `Panth_Core\Helper\Theme` and serves the Alpine.js template for Hyva or the vanilla JS template for Luma.
+3. The gallery reads layout, zoom, lightbox, and navigation settings from admin configuration and applies them at render time.
+4. An **observer on product collection load** ensures that media gallery data is included whenever the module is active.
+5. If Panth Advanced SEO is installed, the gallery reads its generated alt text for each image automatically.
 
 ---
 
 ## FAQ
 
-### Does this replace Magento's default product gallery?
+### Does this replace the default Magento product gallery?
+Yes. When the module is enabled, the default `gallery.phtml` output is replaced via an afterToHtml plugin. Disable the module from admin config to fall back to the Magento default.
 
-Yes, on the product detail page. When the module is enabled, the default `gallery.phtml` is replaced with the Panth gallery (one template for Hyva, another for Luma — chosen automatically).
+### Does it work on Hyva themes?
+Yes. Panth Product Gallery ships a native Alpine.js template for Hyva with no jQuery, Knockout, or RequireJS. The module detects the active theme and serves the correct template for you.
 
-### Does it work with configurable product swatches?
+### Which thumbnail layouts are available?
+Three: horizontal (strip below the main image), vertical (side rail on desktop), and grid (all images displayed at once). You pick the layout in admin configuration.
 
-Yes. When a customer picks a colour/size swatch, the gallery swaps to the correct variant images using Magento's standard `gallery` JSON payload.
+### Does zoom work on mobile?
+Inner zoom works on touch devices. Touch swipe navigation between images is also supported both in the main gallery and inside the lightbox.
 
-### Does it work with video (YouTube / Vimeo)?
-
-Yes. Magento product video entries are rendered inline with a play-button thumbnail; clicking opens the video in the lightbox.
-
-### Is Hyva compatible?
-
-Yes — fully. The module ships an Alpine.js implementation that does not depend on jQuery or Knockout, and installs automatically when the store theme is Hyva.
-
-### Does it affect Core Web Vitals?
-
-Positively. The Hyva implementation uses a minimal JS payload and lazy-loads thumbnails, which typically improves LCP and reduces CLS versus the default gallery.
-
-### Can I override the template in my child theme?
-
-Yes. Copy `view/frontend/templates/product/view/gallery.phtml` (Luma) or the equivalent file under the Hyva area into your own theme and customize freely.
-
-### Does it support multi-store and multi-language?
-
-Yes. All configuration respects Magento's scope hierarchy (default → website → store view) and all user-facing strings are translatable via Magento's `__()` function.
+### Can I use the lightbox with keyboard navigation?
+Yes. The lightbox supports arrow keys to move between images and Escape to close. This can be turned on or off in admin configuration.
 
 ### Does it require Panth Advanced SEO?
+No. The Advanced SEO integration is a soft dependency, meaning it works if Advanced SEO is installed, but the gallery runs fine without it. The integration just improves alt text quality.
 
-No, it is an optional soft dependency. Advanced SEO only improves alt-text quality; the gallery works standalone.
+### Can I embed the gallery in a CMS page?
+Yes. The module includes a widget definition so you can insert the gallery into any CMS page or block through the Magento widget system.
+
+### Does it work with multi-store setups?
+Yes. All admin configuration settings are scoped per store view, following Magento's standard scope order.
+
+### Is it translation ready?
+Yes. Every user-facing label uses Magento's `__()` function, so you can translate from a theme or language pack.
 
 ---
 
@@ -265,6 +258,7 @@ No, it is an optional soft dependency. Advanced SEO only improves alt-text quali
 
 | Channel | Contact |
 |---|---|
+| Product Page | [kishansavaliya.com/magento-2-productgallery.html](https://kishansavaliya.com/magento-2-productgallery.html) |
 | Email | kishansavaliyakb@gmail.com |
 | Website | [kishansavaliya.com](https://kishansavaliya.com) |
 | WhatsApp | +91 84012 70422 |
@@ -274,7 +268,7 @@ No, it is an optional soft dependency. Advanced SEO only improves alt-text quali
 
 Response time: 1-2 business days.
 
-### 💼 Need Custom Magento Development?
+### Need Custom Magento Development?
 
 Looking for **custom gallery layouts**, **PDP redesigns**, **Hyva migration**, or **performance optimization**? Get a free quote in 24 hours:
 
@@ -293,8 +287,8 @@ Looking for **custom gallery layouts**, **PDP redesigns**, **Hyva migration**, o
     <img src="https://img.shields.io/badge/Visit-Panth%20Infotech%20Agency-14a800?style=for-the-badge&logo=upwork&logoColor=white" alt="Visit Agency" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://kishansavaliya.com">
-    <img src="https://img.shields.io/badge/Visit%20Website-kishansavaliya.com-0D9488?style=for-the-badge" alt="Visit Website" />
+  <a href="https://kishansavaliya.com/magento-2-productgallery.html">
+    <img src="https://img.shields.io/badge/View%20Product%20Page-magento--2--productgallery-0D9488?style=for-the-badge" alt="View Product Page" />
   </a>
 </p>
 
@@ -302,35 +296,37 @@ Looking for **custom gallery layouts**, **PDP redesigns**, **Hyva migration**, o
 
 ## About Panth Infotech
 
-Built and maintained by **Kishan Savaliya** — [kishansavaliya.com](https://kishansavaliya.com) — a **Top Rated Plus** Magento developer on Upwork with 10+ years of eCommerce experience.
+Built and maintained by **Kishan Savaliya** ([kishansavaliya.com](https://kishansavaliya.com)), a **Top Rated Plus** Magento developer on Upwork with 10+ years of eCommerce experience.
 
-**Panth Infotech** is a Magento 2 development agency specializing in high-quality, security-focused extensions and themes for both Hyva and Luma storefronts. Our extension suite covers SEO, performance, checkout, product presentation, customer engagement, and store management — over 34 modules built to MEQP standards and tested across Magento 2.4.4 to 2.4.8.
+**Panth Infotech** is a Magento 2 development agency that builds high quality, security focused extensions and themes for both Hyva and Luma storefronts. The extension suite covers SEO, performance, checkout, product presentation, customer engagement, and store management, with each module built to MEQP standards and tested across Magento 2.4.4 to 2.4.8.
 
-Browse the full extension catalog on the [Adobe Commerce Marketplace](https://commercemarketplace.adobe.com) or [Packagist](https://packagist.org/packages/mage2kishan/).
+Browse the full extension catalog on our [Magento extensions page](https://kishansavaliya.com/magento-extensions.html) or on [Packagist](https://packagist.org/packages/mage2kishan/).
 
 ---
 
 ## Quick Links
 
-- 🌐 **Website:** [kishansavaliya.com](https://kishansavaliya.com)
-- 💬 **Get a Quote:** [kishansavaliya.com/get-quote](https://kishansavaliya.com/get-quote)
-- 👨‍💻 **Upwork Profile (Top Rated Plus):** [upwork.com/freelancers/~016dd1767321100e21](https://www.upwork.com/freelancers/~016dd1767321100e21)
-- 🏢 **Upwork Agency:** [upwork.com/agencies/1881421506131960778](https://www.upwork.com/agencies/1881421506131960778/)
-- 📦 **Packagist:** [packagist.org/packages/mage2kishan/module-productgallery](https://packagist.org/packages/mage2kishan/module-productgallery)
-- 🐙 **GitHub:** [github.com/mage2sk/module-productgallery](https://github.com/mage2sk/module-productgallery)
-- 🛒 **Adobe Marketplace:** [commercemarketplace.adobe.com](https://commercemarketplace.adobe.com)
-- 📧 **Email:** kishansavaliyakb@gmail.com
-- 📱 **WhatsApp:** +91 84012 70422
+| Resource | Link |
+|---|---|
+| **Product Page** | [magento-2-productgallery.html](https://kishansavaliya.com/magento-2-productgallery.html) |
+| **Packagist** | [mage2kishan/module-productgallery](https://packagist.org/packages/mage2kishan/module-productgallery) |
+| **GitHub** | [mage2sk/module-productgallery](https://github.com/mage2sk/module-productgallery) |
+| **Website** | [kishansavaliya.com](https://kishansavaliya.com) |
+| **Free Quote** | [kishansavaliya.com/get-quote](https://kishansavaliya.com/get-quote) |
+| **Upwork (Top Rated Plus)** | [Hire Kishan Savaliya](https://www.upwork.com/freelancers/~016dd1767321100e21) |
+| **Upwork Agency** | [Panth Infotech](https://www.upwork.com/agencies/1881421506131960778/) |
+| **Email** | kishansavaliyakb@gmail.com |
+| **WhatsApp** | +91 84012 70422 |
 
 ---
 
 <p align="center">
-  <strong>Ready to upgrade your Magento 2 product pages?</strong><br/>
-  <a href="https://kishansavaliya.com/get-quote">
-    <img src="https://img.shields.io/badge/%F0%9F%9A%80%20Get%20Started%20%E2%86%92-Free%20Quote%20in%2024h-DC2626?style=for-the-badge" alt="Get Started" />
+  <strong>Ready to upgrade your Magento 2 product gallery?</strong><br/>
+  <a href="https://kishansavaliya.com/magento-2-productgallery.html">
+    <img src="https://img.shields.io/badge/%F0%9F%9A%80%20See%20Product%20Gallery%20%E2%86%92-Product%20Page%20%26%20Details-DC2626?style=for-the-badge" alt="See Product Gallery" />
   </a>
 </p>
 
 ---
 
-**SEO Keywords:** magento 2 product gallery, magento 2 image zoom, magento 2 lightbox, magento 2 product images, magento 2 gallery widget, magento 2 thumbnail layout, hyva product gallery, luma product gallery, magento 2 product image slider, magento 2 fullscreen image, magento 2 zoom extension, magento 2 product media gallery, magento 2 inner zoom, magento 2 lens zoom, magento 2 product page gallery, magento 2 PDP gallery, magento 2 responsive gallery, magento 2 mobile gallery, magento 2 image alt text, magento 2 SEO gallery, panth product gallery, panth infotech, hire magento developer, top rated plus upwork, kishan savaliya magento, mage2kishan, mage2sk, magento 2.4.8 gallery, php 8.4 magento module, hyva gallery alpine js, luma gallery knockout, magento 2 product image customization
+**SEO Keywords:** magento 2 product gallery, magento 2 product gallery extension, magento 2 image zoom, magento 2 lightbox, magento 2 thumbnail layout, magento 2 gallery extension, hyva product gallery, hyva gallery alpine js, luma product gallery, magento 2 fullscreen lightbox, magento 2 inner zoom, magento 2 product image zoom, magento 2 gallery zoom, magento 2 gallery widget, magento 2 product page gallery, magento 2 PDP gallery, magento 2 responsive gallery, magento 2 mobile gallery, magento 2 product image slider, magento 2 horizontal thumbnail gallery, magento 2 vertical thumbnail gallery, magento 2 grid gallery, magento 2 swipe gallery, magento 2 keyboard gallery navigation, magento 2 image alt text, panth product gallery, panth infotech, mage2kishan product gallery, hire magento developer, top rated plus upwork, kishan savaliya magento, magento 2.4.8 gallery, php 8.4 magento gallery module, custom magento development

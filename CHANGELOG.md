@@ -4,6 +4,16 @@ All notable changes to this extension are documented here. The format
 is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.5] - 2026-06-18
+
+### Changed
+- README rewritten to match standard Panth Infotech template: added
+  Quick Answer, Who Is It For, and FAQ sections, corrected Configuration
+  table to match system.xml fields only, updated canonical URL and badges
+  to the live product page.
+
+---
+
 ## [2.0.0] - Initial Marketplace release
 
 ### Added
