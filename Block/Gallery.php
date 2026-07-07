@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright © Panth Infotech. All rights reserved.
- *
- * Product Gallery block with theme-aware template switching.
- */
 declare(strict_types=1);
 
 namespace Panth\ProductGallery\Block;
@@ -15,41 +10,16 @@ use Magento\Framework\App\ObjectManager;
 use Panth\Core\Helper\Theme;
 use Panth\ProductGallery\Helper\Data as ConfigHelper;
 
-/**
- * Product gallery block
- */
 class Gallery extends AbstractProduct
 {
-    /**
-     * @var ConfigHelper
-     */
     private ConfigHelper $configHelper;
 
-    /**
-     * @var Theme
-     */
     private Theme $themeHelper;
 
-    /**
-     * @var ImageHelper
-     */
     private ImageHelper $imageHelper;
 
-    /**
-     * Optional SEO image template resolver from Panth_AdvancedSEO.
-     * Resolved at runtime to avoid ReflectionException when AdvancedSEO is absent.
-     *
-     * @var object|null
-     */
     private ?object $imageTemplateResolver = null;
 
-    /**
-     * @param Context $context
-     * @param ConfigHelper $configHelper
-     * @param Theme $themeHelper
-     * @param ImageHelper $imageHelper
-     * @param array $data
-     */
     public function __construct(
         Context $context,
         ConfigHelper $configHelper,
@@ -64,11 +34,6 @@ class Gallery extends AbstractProduct
         $this->initImageTemplateResolver();
     }
 
-    /**
-     * Resolve optional AdvancedSEO dependency at runtime.
-     *
-     * @return void
-     */
     private function initImageTemplateResolver(): void
     {
         $resolverClass = 'Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver';
@@ -81,11 +46,6 @@ class Gallery extends AbstractProduct
         }
     }
 
-    /**
-     * Switch template based on active theme
-     *
-     * @return string
-     */
     public function getTemplate()
     {
         if ($this->themeHelper->isHyva()) {
@@ -94,31 +54,16 @@ class Gallery extends AbstractProduct
         return 'Panth_ProductGallery::gallery.phtml';
     }
 
-    /**
-     * Check if module is enabled
-     *
-     * @return bool
-     */
     public function isEnabled(): bool
     {
         return $this->configHelper->isEnabled();
     }
 
-    /**
-     * Get the current product
-     *
-     * @return \Magento\Catalog\Model\Product|null
-     */
     public function getCurrentProduct()
     {
         return $this->getProduct();
     }
 
-    /**
-     * Get product gallery images
-     *
-     * @return array
-     */
     public function getGalleryImages(): array
     {
         $product = $this->getCurrentProduct();
@@ -190,12 +135,6 @@ class Gallery extends AbstractProduct
         return $images;
     }
 
-    /**
-     * Resolve SEO alt/title via the optionally resolved template resolver.
-     *
-     * @param mixed $product
-     * @return array{0:string,1:string}
-     */
     private function resolveSeoAltTitle($product): array
     {
         if ($this->imageTemplateResolver === null) {
@@ -220,31 +159,16 @@ class Gallery extends AbstractProduct
         }
     }
 
-    /**
-     * Get gallery configuration array
-     *
-     * @return array
-     */
     public function getGalleryConfig(): array
     {
         return $this->configHelper->getGalleryConfig();
     }
 
-    /**
-     * Get gallery config as JSON
-     *
-     * @return string
-     */
     public function getGalleryConfigJson(): string
     {
         return (string) json_encode($this->configHelper->getGalleryConfig());
     }
 
-    /**
-     * Only render when enabled and product exists
-     *
-     * @return string
-     */
     protected function _toHtml(): string
     {
         $product = $this->getCurrentProduct();

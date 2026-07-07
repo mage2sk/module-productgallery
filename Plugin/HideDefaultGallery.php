@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright © Panth Infotech. All rights reserved.
- *
- * Plugin to replace default Magento gallery with custom Panth gallery.
- */
 declare(strict_types=1);
 
 namespace Panth\ProductGallery\Plugin;
@@ -15,51 +10,20 @@ use Panth\Core\Helper\Theme;
 use Panth\ProductGallery\Helper\Data as ConfigHelper;
 use Panth\ProductGallery\ViewModel\Config as ConfigViewModel;
 
-/**
- * Plugin to hide the default Magento/Hyva gallery and render Panth gallery instead
- */
 class HideDefaultGallery
 {
-    /**
-     * @var ConfigHelper
-     */
     private ConfigHelper $configHelper;
 
-    /**
-     * @var Theme
-     */
     private Theme $themeHelper;
 
-    /**
-     * @var ConfigViewModel
-     */
     private ConfigViewModel $configViewModel;
 
-    /**
-     * @var ImageHelper
-     */
     private ImageHelper $imageHelper;
 
-    /**
-     * @var bool
-     */
     private bool $rendering = false;
 
-    /**
-     * Optional SEO image template resolver from Panth_AdvancedSEO.
-     * Resolved at runtime via ObjectManager to avoid ReflectionException
-     * when AdvancedSEO is not installed.
-     *
-     * @var object|null
-     */
     private ?object $imageTemplateResolver = null;
 
-    /**
-     * @param ConfigHelper $configHelper
-     * @param Theme $themeHelper
-     * @param ConfigViewModel $configViewModel
-     * @param ImageHelper $imageHelper
-     */
     public function __construct(
         ConfigHelper $configHelper,
         Theme $themeHelper,
@@ -73,11 +37,6 @@ class HideDefaultGallery
         $this->initImageTemplateResolver();
     }
 
-    /**
-     * Resolve optional AdvancedSEO dependency at runtime.
-     *
-     * @return void
-     */
     private function initImageTemplateResolver(): void
     {
         $resolverClass = 'Panth\AdvancedSEO\Model\ImageSeo\ImageTemplateResolver';
@@ -90,20 +49,12 @@ class HideDefaultGallery
         }
     }
 
-    /**
-     * Replace default gallery HTML with Panth gallery
-     *
-     * @param DefaultGallery $subject
-     * @param string $result
-     * @return string
-     */
     public function afterToHtml(DefaultGallery $subject, string $result): string
     {
         if (!$this->configHelper->isEnabled() || $this->rendering) {
             return $result;
         }
 
-        // Only replace the main gallery block, not OG/meta blocks
         $blockName = $subject->getNameInLayout();
         if ($blockName !== 'product.media' && $blockName !== 'product.info.media.image') {
             return $result;
@@ -125,7 +76,6 @@ class HideDefaultGallery
                 ? 'Panth_ProductGallery::hyva/gallery.phtml'
                 : 'Panth_ProductGallery::gallery.phtml';
 
-            // Use the block's own rendering engine to avoid require statements
             $subject->setData('panth_gallery_images', $images);
             $subject->setData('panth_gallery_config', $this->configViewModel->getGalleryConfig());
             $subject->setData('panth_gallery_viewmodel', $this->configViewModel);
@@ -139,7 +89,6 @@ class HideDefaultGallery
                 return $html;
             }
         } catch (\Exception $e) {
-            // Fall back to default
         } finally {
             $this->rendering = false;
         }
@@ -147,12 +96,6 @@ class HideDefaultGallery
         return $result;
     }
 
-    /**
-     * Build gallery images array from product media gallery
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @return array
-     */
     private function buildImages($product): array
     {
         $images = [];
@@ -215,12 +158,6 @@ class HideDefaultGallery
         return $images;
     }
 
-    /**
-     * Resolve SEO alt/title via the optionally injected template resolver.
-     *
-     * @param mixed $product
-     * @return array{0:string,1:string}
-     */
     private function resolveSeoAltTitle($product): array
     {
         if ($this->imageTemplateResolver === null) {

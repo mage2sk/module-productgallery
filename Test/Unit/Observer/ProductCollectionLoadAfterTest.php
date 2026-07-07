@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © Panth Infotech. All rights reserved.
- */
 declare(strict_types=1);
 
 namespace Panth\ProductGallery\Test\Unit\Observer;
@@ -16,14 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class ProductCollectionLoadAfterTest extends TestCase
 {
-    /**
-     * @var ProductCollectionLoadAfter
-     */
     private ProductCollectionLoadAfter $observer;
 
-    /**
-     * @var ConfigHelper|MockObject
-     */
     private $configHelperMock;
 
     protected function setUp(): void
@@ -32,9 +23,6 @@ class ProductCollectionLoadAfterTest extends TestCase
         $this->observer = new ProductCollectionLoadAfter($this->configHelperMock);
     }
 
-    /**
-     * Test observer does nothing when module is disabled
-     */
     public function testExecuteWhenDisabled(): void
     {
         $this->configHelperMock->expects($this->once())
@@ -48,9 +36,6 @@ class ProductCollectionLoadAfterTest extends TestCase
         $this->observer->execute($eventObserverMock);
     }
 
-    /**
-     * Test observer adds media gallery data when enabled
-     */
     public function testExecuteWhenEnabled(): void
     {
         $this->configHelperMock->expects($this->once())
@@ -75,9 +60,6 @@ class ProductCollectionLoadAfterTest extends TestCase
         $this->observer->execute($eventObserverMock);
     }
 
-    /**
-     * Test observer is properly instantiated
-     */
     public function testObserverProperlyInstantiated(): void
     {
         $this->assertInstanceOf(ProductCollectionLoadAfter::class, $this->observer);

@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © Panth Infotech. All rights reserved.
- */
 declare(strict_types=1);
 
 namespace Panth\ProductGallery\Test\Unit\Helper;
@@ -15,14 +12,8 @@ use PHPUnit\Framework\TestCase;
 
 class DataTest extends TestCase
 {
-    /**
-     * @var Data
-     */
     private Data $helper;
 
-    /**
-     * @var ScopeConfigInterface|MockObject
-     */
     private $scopeConfigMock;
 
     protected function setUp(): void
@@ -35,9 +26,6 @@ class DataTest extends TestCase
         $this->helper = new Data($contextMock);
     }
 
-    /**
-     * Test isEnabled returns false when not configured
-     */
     public function testIsEnabledReturnsFalse(): void
     {
         $this->scopeConfigMock->expects($this->once())
@@ -52,9 +40,6 @@ class DataTest extends TestCase
         $this->assertFalse($this->helper->isEnabled());
     }
 
-    /**
-     * Test isEnabled returns true when enabled
-     */
     public function testIsEnabledReturnsTrue(): void
     {
         $this->scopeConfigMock->expects($this->once())
@@ -69,9 +54,6 @@ class DataTest extends TestCase
         $this->assertTrue($this->helper->isEnabled());
     }
 
-    /**
-     * Test getLayoutType returns default when not configured
-     */
     public function testGetLayoutTypeDefault(): void
     {
         $this->scopeConfigMock->expects($this->once())
@@ -86,9 +68,6 @@ class DataTest extends TestCase
         $this->assertEquals('horizontal', $this->helper->getLayoutType());
     }
 
-    /**
-     * Test getLayoutType returns configured value
-     */
     public function testGetLayoutTypeConfigured(): void
     {
         $this->scopeConfigMock->expects($this->once())
@@ -103,9 +82,6 @@ class DataTest extends TestCase
         $this->assertEquals('vertical', $this->helper->getLayoutType());
     }
 
-    /**
-     * Test getZoomLevel clamps to valid range
-     */
     public function testGetZoomLevelClamped(): void
     {
         $this->scopeConfigMock->expects($this->once())
@@ -120,9 +96,6 @@ class DataTest extends TestCase
         $this->assertEquals(5, $this->helper->getZoomLevel());
     }
 
-    /**
-     * Test getGalleryConfig returns full config array
-     */
     public function testGetGalleryConfigReturnsArray(): void
     {
         $this->scopeConfigMock->method('isSetFlag')->willReturn(true);
