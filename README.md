@@ -188,14 +188,14 @@ bin/magento module:status Panth_ProductGallery
 
 After install, open:
 ```
-Admin → Stores → Configuration → Panth Extensions → Product Gallery
+Admin -> Stores -> Configuration -> Panth Extensions -> Product Gallery
 ```
 
 ---
 
 ## Configuration
 
-Go to **Stores → Configuration → Panth Extensions → Product Gallery**.
+Go to **Stores -> Configuration -> Panth Extensions -> Product Gallery**.
 
 | Setting | Group | Default | Description |
 |---|---|---|---|
