@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ *
+ * Panth Product Gallery Widget
+ * Embeds a custom product image gallery on any CMS page or block.
+ * Uses admin configuration for layout, zoom, and lightbox settings.
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="panth_product_gallery" class="Panth\ProductGallery\Block\Widget\Gallery">
+        <label translate="true">Panth Product Gallery</label>
+        <description translate="true">Displays a custom product image gallery with zoom, lightbox, and configurable thumbnail layout.</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" required="true" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="Panth_ProductGallery::gallery.phtml" selected="true">
+                        <label translate="true">Default Gallery</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

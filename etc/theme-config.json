@@ -1,0 +1,20 @@
+{
+  "gallery-primary": "#0D9488",
+  "gallery-bg": "#FFFFFF",
+  "gallery-border": "#E5E7EB",
+  "gallery-text": "#171717",
+  "gallery-text-muted": "#6B7280",
+  "gallery-thumb-border": "#E5E7EB",
+  "gallery-thumb-active-border": "#0D9488",
+  "gallery-thumb-size": "72px",
+  "gallery-thumb-gap": "8px",
+  "gallery-zoom-bg": "rgba(0,0,0,0.8)",
+  "gallery-zoom-icon-color": "#FFFFFF",
+  "gallery-nav-bg": "rgba(0,0,0,0.4)",
+  "gallery-nav-color": "#FFFFFF",
+  "gallery-nav-hover-bg": "rgba(0,0,0,0.7)",
+  "gallery-nav-size": "40px",
+  "gallery-lightbox-bg": "rgba(0,0,0,0.9)",
+  "gallery-lightbox-close-color": "#FFFFFF",
+  "gallery-border-radius": "8px"
+}
