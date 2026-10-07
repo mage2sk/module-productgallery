@@ -1,0 +1,571 @@
+<?php
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ *
+ * Product Gallery - Hyva Template
+ * Alpine.js + Tailwind CSS
+ *
+ * @var \Panth\ProductGallery\Block\Gallery $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \Panth\ProductGallery\ViewModel\Config|null $viewModel */
+/** @var array|null $images */
+/** @var array|null $config */
+
+$viewModel = $block->getData('panth_gallery_viewmodel') ?: $block->getData('view_model');
+if (!$viewModel instanceof \Panth\ProductGallery\ViewModel\Config) {
+    return;
+}
+$images = $block->getData('panth_gallery_images');
+if (empty($images) && method_exists($block, 'getGalleryImages')) {
+    $images = $block->getGalleryImages();
+}
+if (empty($images)) {
+    return;
+}
+$config = $block->getData('panth_gallery_config') ?: $viewModel->getGalleryConfig();
+$layoutType = $config['layout_type'] ?? 'horizontal';
+if (!in_array($layoutType, ['horizontal', 'vertical', 'grid'], true)) {
+    $layoutType = 'horizontal';
+}
+$enableZoom = (bool) ($config['enable_zoom'] ?? true);
+$zoomLevel = (int) ($config['zoom_level'] ?? 3);
+$enableLightbox = (bool) ($config['enable_lightbox'] ?? true);
+$showCounter = (bool) ($config['show_counter'] ?? true);
+$enableKeyboardNav = (bool) ($config['enable_keyboard_nav'] ?? true);
+$showArrows = (bool) ($config['show_arrows'] ?? true);
+$infiniteLoop = (bool) ($config['infinite_loop'] ?? false);
+$enableSwipe = (bool) ($config['enable_swipe'] ?? true);
+$thumbWidth = max(1, (int) ($config['thumb_width'] ?? 72));
+$thumbHeight = max(1, (int) ($config['thumb_height'] ?? 72));
+$mainWidth = max(1, (int) ($config['main_image_width'] ?? 700));
+$mainHeight = max(1, (int) ($config['main_image_height'] ?? 700));
+
+$galleryId = 'panth-gallery-' . uniqid();
+$images = array_values($images);
+$startIndex = 0;
+if ($layoutType !== 'grid') {
+    foreach ($images as $i => $img) {
+        if (!empty($img['is_main'])) {
+            $startIndex = (int) $i;
+            break;
+        }
+    }
+}
+$startImage = $images[$startIndex];
+
+$imagesJson = $escaper->escapeHtmlAttr(json_encode(array_map(function ($img) {
+    return [
+        'thumb' => $img['thumb'],
+        'medium' => $img['medium'],
+        'large' => $img['large'],
+        'alt' => $img['alt'],
+    ];
+}, $images)));
+
+$isVertical = ($layoutType === 'vertical');
+$wrapperClass = 'panth-gallery panth-gallery--' . $layoutType;
+$fallbackAlt = "'" . $escaper->escapeJs((string) __('Product image')) . "'";
+$viewImageJs = "'" . $escaper->escapeJs((string) __('View image')) . " '";
+$gridTag = $enableLightbox ? 'button' : 'div';
+?>
+<style>
+.panth-gallery .pg-thumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding:4px 4px 8px}
+.panth-gallery--vertical{display:flex;flex-direction:column-reverse;gap:8px}
+.panth-gallery--vertical .pg-thumbs{margin-top:0}
+.panth-gallery--vertical .pg-main{min-width:0}
+@media (min-width:1024px){
+.panth-gallery--vertical{flex-direction:row;gap:12px}
+.panth-gallery--vertical .pg-main{flex:1}
+.panth-gallery--vertical .pg-thumbs{flex-direction:column;flex-shrink:0;overflow-x:hidden;overflow-y:auto;max-height:500px;padding:4px}
+}
+.panth-gallery .pg-thumb{flex-shrink:0;border-radius:8px;overflow:hidden;cursor:pointer;background:#fff;padding:3px;border:2px solid #D4D4D4;transition:border-color .2s,box-shadow .2s}
+.panth-gallery .pg-thumb:hover{border-color:#525252}
+.panth-gallery .pg-thumb[aria-current="true"]{border-color:var(--color-primary,#0D9488);box-shadow:0 0 0 2px rgba(13,148,136,.2)}
+.panth-gallery .pg-thumb:focus-visible{outline:2px solid var(--color-primary,#0D9488);outline-offset:2px}
+.panth-gallery .pg-thumb img{display:block;object-fit:contain;background:#FAFAFA}
+.panth-gallery .pg-stage{position:relative;overflow:hidden;border-radius:8px;border:1px solid #E5E5E5;background:#FAFAFA}
+.panth-gallery .pg-main-img{display:block;width:100%;height:auto;object-fit:contain;transition:opacity .2s}
+.panth-gallery .pg-main-img:focus-visible{outline:2px solid var(--color-primary,#0D9488);outline-offset:-2px}
+.panth-gallery .pg-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;padding:0;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.6);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s,opacity .2s}
+.panth-gallery .pg-arrow:hover{background:rgba(0,0,0,.7)}
+.panth-gallery .pg-arrow:focus-visible{outline:2px solid #fff;box-shadow:0 0 0 4px var(--color-primary,#0D9488)}
+.panth-gallery .pg-arrow:disabled{opacity:.35;cursor:default}
+.panth-gallery .pg-arrow--prev{left:8px}
+.panth-gallery .pg-arrow--next{right:8px}
+.panth-gallery .pg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:768px){.panth-gallery .pg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.panth-gallery .pg-grid-item{display:block;width:100%;padding:0;margin:0;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;background:#FAFAFA;aspect-ratio:1/1}
+.panth-gallery .pg-grid-item--main{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.panth-gallery button.pg-grid-item{cursor:pointer}
+.panth-gallery button.pg-grid-item:focus-visible{outline:2px solid var(--color-primary,#0D9488);outline-offset:2px}
+.panth-gallery .pg-grid-item img{display:block;width:100%;height:100%;object-fit:contain;transition:transform .3s}
+.panth-gallery button.pg-grid-item:hover img{transform:scale(1.05)}
+</style>
+
+<div class="<?= $escaper->escapeHtmlAttr($wrapperClass) ?>"
+     id="<?= $escaper->escapeHtmlAttr($galleryId) ?>"
+     x-data="panthGallery()"
+     x-init="init(<?= /* @noEscape */ $imagesJson ?>, <?= (int) $startIndex ?>)"
+     @update-gallery.window="updateGallery($event.detail)"
+     @reset-gallery.window="resetGallery()"
+>
+    <?php if ($layoutType === 'grid'): ?>
+        <div class="pg-grid" x-show="!variantActive">
+            <?php foreach ($images as $index => $image): ?>
+                <<?= /* @noEscape */ $gridTag ?> class="pg-grid-item<?= $index === 0 ? ' pg-grid-item--main' : '' ?>"
+                    <?php if ($enableLightbox): ?>
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('View image %1', $index + 1)) ?>"
+                    @click="openLightbox(<?= (int) $index ?>)"
+                    <?php endif; ?>>
+                    <img src="<?= $escaper->escapeUrl($image['medium']) ?>"
+                         alt="<?= $escaper->escapeHtmlAttr($image['alt']) ?>"
+                         width="<?= (int) $mainWidth ?>" height="<?= (int) $mainHeight ?>"
+                         <?php if ($index === 0): ?>fetchpriority="high"<?php endif; ?>
+                         loading="<?= $index === 0 ? 'eager' : 'lazy' ?>" />
+                </<?= /* @noEscape */ $gridTag ?>>
+            <?php endforeach; ?>
+        </div>
+        <div class="pg-grid" x-show="variantActive" x-cloak>
+            <template x-for="(img, i) in images" :key="img.medium + i">
+                <<?= /* @noEscape */ $gridTag ?> class="pg-grid-item" :class="i === 0 ? 'pg-grid-item--main' : ''"
+                    <?php if ($enableLightbox): ?>
+                    type="button"
+                    aria-haspopup="dialog"
+                    :aria-label="<?= $escaper->escapeHtmlAttr($viewImageJs) ?> + (i + 1)"
+                    @click="openLightbox(i)"
+                    <?php endif; ?>>
+                    <img :src="img.medium" :alt="img.alt"
+                         width="<?= (int) $mainWidth ?>" height="<?= (int) $mainHeight ?>" loading="lazy" />
+                </<?= /* @noEscape */ $gridTag ?>>
+            </template>
+        </div>
+    <?php else: ?>
+        <?php if ($isVertical): ?>
+            <div class="pg-thumbs" x-show="variantActive && images.length > 1" x-cloak
+                 @keydown="thumbKey($event)">
+                <template x-for="(img, i) in images" :key="img.thumb + i">
+                    <button type="button" class="pg-thumb"
+                            :aria-current="currentIndex === i ? 'true' : 'false'"
+                            @click="goToImage(i)"
+                            :aria-label="<?= $escaper->escapeHtmlAttr($viewImageJs) ?> + (i + 1)">
+                        <img :src="img.thumb" :alt="img.alt"
+                             width="<?= (int) $thumbWidth ?>" height="<?= (int) $thumbHeight ?>" loading="lazy" />
+                    </button>
+                </template>
+            </div>
+            <?php if (count($images) > 1): ?>
+                <div class="pg-thumbs" x-show="!variantActive" @keydown="thumbKey($event)">
+                    <?php foreach ($images as $index => $image): ?>
+                        <button type="button" class="pg-thumb"
+                                aria-current="<?= $index === $startIndex ? 'true' : 'false' ?>"
+                                :aria-current="currentIndex === <?= (int) $index ?> ? 'true' : 'false'"
+                                @click="goToImage(<?= (int) $index ?>)"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('View image %1', $index + 1)) ?>">
+                            <img src="<?= $escaper->escapeUrl($image['thumb']) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($image['alt']) ?>"
+                                 width="<?= (int) $thumbWidth ?>" height="<?= (int) $thumbHeight ?>"
+                                 loading="lazy" />
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <div class="pg-main" id="gallery">
+            <div class="pg-stage product-image-wrapper"
+                 <?php if ($enableSwipe): ?>
+                 @touchstart.passive="touchStartX = $event.touches[0].clientX"
+                 @touchend.passive="handleSwipe($event)"
+                 <?php endif; ?>
+                 <?php if ($enableZoom): ?>
+                 @pointermove="handleZoom($event)"
+                 @pointerleave="zoomActive = false"
+                 <?php endif; ?>
+            >
+                <img class="pg-main-img"
+                     src="<?= $escaper->escapeUrl($startImage['medium']) ?>"
+                     alt="<?= $escaper->escapeHtmlAttr($startImage['alt']) ?>"
+                     :src="images[currentIndex]?.medium"
+                     :alt="images[currentIndex]?.alt || <?= $escaper->escapeHtmlAttr($fallbackAlt) ?>"
+                     width="<?= (int) $mainWidth ?>" height="<?= (int) $mainHeight ?>"
+                     style="<?= $enableLightbox ? 'cursor:pointer;' : '' ?>"
+                     @keydown.arrow-left.prevent="prevImage()"
+                     @keydown.arrow-right.prevent="nextImage()"
+                     <?php if ($enableLightbox): ?>
+                     @click="openLightbox(currentIndex)"
+                     tabindex="0"
+                     role="button"
+                     aria-haspopup="dialog"
+                     @keydown.enter.prevent="openLightbox(currentIndex)"
+                     @keydown.space.prevent="openLightbox(currentIndex)"
+                     <?php endif; ?>
+                     fetchpriority="high"
+                     loading="eager" />
+
+                <?php if ($enableZoom): ?>
+                    <div x-show="zoomActive" x-cloak
+                         style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:5;">
+                        <div :style="zoomStyle"
+                             style="position:absolute;top:0;left:0;right:0;bottom:0;background-repeat:no-repeat;">
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($showArrows): ?>
+                    <button type="button" class="pg-arrow pg-arrow--prev"
+                            x-show="images.length > 1" x-cloak
+                            :disabled="!infiniteLoop && currentIndex <= 0"
+                            @click="prevImage()"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Previous image')) ?>">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="pg-arrow pg-arrow--next"
+                            x-show="images.length > 1" x-cloak
+                            :disabled="!infiniteLoop && currentIndex >= images.length - 1"
+                            @click="nextImage()"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Next image')) ?>">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <?php if (!$isVertical): ?>
+            <div class="pg-thumbs" x-show="variantActive && images.length > 1" x-cloak
+                 @keydown="thumbKey($event)">
+                <template x-for="(img, i) in images" :key="img.thumb + i">
+                    <button type="button" class="pg-thumb"
+                            :aria-current="currentIndex === i ? 'true' : 'false'"
+                            @click="goToImage(i)"
+                            :aria-label="<?= $escaper->escapeHtmlAttr($viewImageJs) ?> + (i + 1)">
+                        <img :src="img.thumb" :alt="img.alt"
+                             width="<?= (int) $thumbWidth ?>" height="<?= (int) $thumbHeight ?>" loading="lazy" />
+                    </button>
+                </template>
+            </div>
+            <?php if (count($images) > 1): ?>
+                <div class="pg-thumbs" x-show="!variantActive" @keydown="thumbKey($event)">
+                    <?php foreach ($images as $index => $image): ?>
+                        <button type="button" class="pg-thumb"
+                                aria-current="<?= $index === $startIndex ? 'true' : 'false' ?>"
+                                :aria-current="currentIndex === <?= (int) $index ?> ? 'true' : 'false'"
+                                @click="goToImage(<?= (int) $index ?>)"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('View image %1', $index + 1)) ?>">
+                            <img src="<?= $escaper->escapeUrl($image['thumb']) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($image['alt']) ?>"
+                                 width="<?= (int) $thumbWidth ?>" height="<?= (int) $thumbHeight ?>"
+                                 loading="lazy" />
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
+
+<script>
+    function panthGallery() {
+        return {
+            images: [],
+            initialImages: [],
+            startIndex: 0,
+            variantActive: false,
+            currentIndex: 0,
+            touchStartX: 0,
+            zoomActive: false,
+            zoomStyle: '',
+            infiniteLoop: <?= $infiniteLoop ? 'true' : 'false' ?>,
+
+            init(imageData, startIndex) {
+                this.images = imageData || [];
+                this.initialImages = this.images;
+                this.startIndex = startIndex || 0;
+                this.currentIndex = this.startIndex;
+            },
+
+            updateGallery(items) {
+                if (!Array.isArray(items) || !items.length) {
+                    return;
+                }
+                var fallbackAlt = this.initialImages.length ? this.initialImages[0].alt : '';
+                var mainIndex = -1;
+                var mapped = [];
+                items.forEach(function (item) {
+                    if (!item || !item.img) {
+                        return;
+                    }
+                    if (item.isMain && mainIndex < 0) {
+                        mainIndex = mapped.length;
+                    }
+                    mapped.push({
+                        thumb: item.thumb || item.img,
+                        medium: item.img,
+                        large: item.full || item.img,
+                        alt: item.caption || fallbackAlt
+                    });
+                });
+                if (!mapped.length) {
+                    return;
+                }
+                this.zoomActive = false;
+                this.images = mapped;
+                this.variantActive = true;
+                this.currentIndex = Math.max(0, mainIndex);
+            },
+
+            resetGallery() {
+                this.zoomActive = false;
+                this.images = this.initialImages;
+                this.variantActive = false;
+                this.currentIndex = this.startIndex;
+            },
+
+            handleSwipe(event) {
+                var diff = this.touchStartX - event.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        this.nextImage();
+                    } else {
+                        this.prevImage();
+                    }
+                }
+            },
+
+            thumbKey(event) {
+                var key = event.key;
+                if (key === 'ArrowRight' || key === 'ArrowDown') {
+                    this.nextImage();
+                } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+                    this.prevImage();
+                } else if (key === 'Home') {
+                    this.goToImage(0);
+                } else if (key === 'End') {
+                    this.goToImage(this.images.length - 1);
+                } else {
+                    return;
+                }
+                event.preventDefault();
+                var wrap = event.currentTarget, index = this.currentIndex;
+                this.$nextTick(function () {
+                    var btn = wrap.querySelectorAll('.pg-thumb')[index];
+                    if (btn) {
+                        btn.focus();
+                    }
+                });
+            },
+
+            goToImage(index) {
+                if (index >= 0 && index < this.images.length) {
+                    this.currentIndex = index;
+                }
+            },
+
+            prevImage() {
+                if (this.infiniteLoop) {
+                    this.currentIndex = this.currentIndex <= 0 ? this.images.length - 1 : this.currentIndex - 1;
+                } else {
+                    this.currentIndex = Math.max(0, this.currentIndex - 1);
+                }
+            },
+
+            nextImage() {
+                if (this.infiniteLoop) {
+                    this.currentIndex = this.currentIndex >= this.images.length - 1 ? 0 : this.currentIndex + 1;
+                } else {
+                    this.currentIndex = Math.min(this.images.length - 1, this.currentIndex + 1);
+                }
+            },
+
+            <?php if ($enableZoom): ?>
+            handleZoom(event) {
+                var current = this.images[this.currentIndex];
+                if (event.pointerType !== 'mouse' || !current) {
+                    this.zoomActive = false;
+                    return;
+                }
+                if (event.target.closest && event.target.closest('button')) {
+                    this.zoomActive = false;
+                    return;
+                }
+                var rect = event.currentTarget.getBoundingClientRect();
+                var xPct = ((event.clientX - rect.left) / rect.width) * 100;
+                var yPct = ((event.clientY - rect.top) / rect.height) * 100;
+
+                this.zoomActive = true;
+                this.zoomStyle = 'position:absolute;top:0;left:0;right:0;bottom:0;background-repeat:no-repeat;' +
+                    'background-image:url(' + JSON.stringify(String(current.large)) + ');' +
+                    'background-size:<?= (int) $zoomLevel * 100 ?>%;' +
+                    'background-position:' + xPct + '% ' + yPct + '%;';
+            },
+            <?php endif; ?>
+
+            openLightbox(index) {
+                <?php if ($enableLightbox): ?>
+                if (window.panthLightbox) {
+                    window.panthLightbox.open(this.images, index);
+                }
+                <?php endif; ?>
+            },
+        };
+    }
+
+    <?php if ($enableLightbox): ?>
+    (function() {
+        if (window.panthLightbox) {
+            return;
+        }
+        var lb = null, img = null, counter = null, prevBtn = null, nextBtn = null, idx = 0, imgs = [], zoom = 1;
+        var L = <?= /* @noEscape */ json_encode(['dialog' => (string) __('Product images'), 'zoomIn' => (string) __('Zoom in'), 'zoomOut' => (string) __('Zoom out'), 'close' => (string) __('Close'), 'prev' => (string) __('Previous image'), 'next' => (string) __('Next image')], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        var lastFocus = null, touchX = null;
+
+        function create() {
+            lb = document.createElement('div');
+            lb.id = 'panth-lightbox-overlay';
+            lb.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.93);';
+            lb.setAttribute('role', 'dialog');
+            lb.setAttribute('aria-modal', 'true');
+            lb.setAttribute('aria-label', L.dialog);
+
+            <?php if ($showCounter): ?>
+            counter = document.createElement('div');
+            counter.setAttribute('aria-live', 'polite');
+            counter.style.cssText = 'position:fixed;top:20px;left:20px;color:rgba(255,255,255,0.85);font-size:14px;font-weight:600;z-index:2;';
+            lb.appendChild(counter);
+            <?php endif; ?>
+
+            var controls = document.createElement('div');
+            controls.style.cssText = 'position:fixed;top:16px;right:16px;z-index:2;display:flex;gap:8px;';
+
+            var zoomInBtn = makeBtn('relative', '', '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>');
+            zoomInBtn.setAttribute('aria-label', L.zoomIn);
+            zoomInBtn.onclick = function(e) { e.stopPropagation(); zoomIn(); };
+            controls.appendChild(zoomInBtn);
+
+            var zoomOutBtn = makeBtn('relative', '', '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/></svg>');
+            zoomOutBtn.setAttribute('aria-label', L.zoomOut);
+            zoomOutBtn.onclick = function(e) { e.stopPropagation(); zoomOut(); };
+            controls.appendChild(zoomOutBtn);
+
+            var closeBtn = makeBtn('relative', '', '<svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>');
+            closeBtn.setAttribute('aria-label', L.close);
+            closeBtn.setAttribute('data-lb-close', '1');
+            closeBtn.onclick = function(e) { e.stopPropagation(); close(); };
+            controls.appendChild(closeBtn);
+
+            lb.appendChild(controls);
+
+            prevBtn = makeBtn('fixed', 'left:16px;top:50%;transform:translateY(-50%);', '<svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>');
+            prevBtn.setAttribute('aria-label', L.prev);
+            prevBtn.onclick = function(e) { e.stopPropagation(); prev(); };
+            lb.appendChild(prevBtn);
+
+            nextBtn = makeBtn('fixed', 'right:16px;top:50%;transform:translateY(-50%);', '<svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>');
+            nextBtn.setAttribute('aria-label', L.next);
+            nextBtn.onclick = function(e) { e.stopPropagation(); next(); };
+            lb.appendChild(nextBtn);
+
+            img = document.createElement('img');
+            img.style.cssText = 'max-width:85vw;max-height:85vh;object-fit:contain;position:relative;z-index:1;transition:transform 0.3s ease;cursor:grab;';
+            img.draggable = false;
+            lb.appendChild(img);
+
+            lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+
+            lb.addEventListener('touchstart', function(e) { touchX = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+            lb.addEventListener('touchend', function(e) {
+                if (touchX === null || zoom !== 1) { touchX = null; return; }
+                var dx = e.changedTouches[0].clientX - touchX; touchX = null;
+                if (Math.abs(dx) > 50) { if (dx < 0) { next(); } else { prev(); } }
+            }, { passive: true });
+            lb.addEventListener('keydown', function(e) {
+                if (e.key !== 'Tab') return;
+                var items = Array.prototype.slice.call(lb.querySelectorAll('button')).filter(function(b) { return b.style.display !== 'none'; });
+                if (!items.length) return;
+                var first = items[0], last = items[items.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            });
+
+            lb.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY < 0) zoomIn(); else zoomOut();
+            }, { passive: false });
+
+            document.addEventListener('keydown', function(e) {
+                if (lb.style.display !== 'flex') return;
+                if (e.key === 'Escape') close();
+                <?php if ($enableKeyboardNav): ?>
+                if (e.key === 'ArrowLeft') prev();
+                if (e.key === 'ArrowRight') next();
+                if (e.key === '+' || e.key === '=') zoomIn();
+                if (e.key === '-') zoomOut();
+                if (e.key === '0') resetZoom();
+                <?php endif; ?>
+            });
+
+            document.body.appendChild(lb);
+        }
+
+        function makeBtn(pos, extra, svg) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.style.cssText = 'position:' + pos + ';' + extra + 'z-index:2;width:44px;height:44px;padding:0;border-radius:50%;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.4);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;';
+            b.innerHTML = svg;
+            b.onmouseenter = function() { b.style.background = 'rgba(0,0,0,0.8)'; };
+            b.onmouseleave = function() { b.style.background = 'rgba(0,0,0,0.55)'; };
+            return b;
+        }
+
+        function applyZoom() {
+            if (img) img.style.transform = 'scale(' + zoom + ')';
+        }
+
+        function zoomIn() { zoom = Math.min(5, zoom + 0.5); applyZoom(); }
+        function zoomOut() { zoom = Math.max(0.5, zoom - 0.5); applyZoom(); }
+        function resetZoom() { zoom = 1; applyZoom(); }
+
+        function update() {
+            img.src = imgs[idx].large;
+            img.alt = imgs[idx].alt;
+            resetZoom();
+            if (counter) counter.textContent = (idx + 1) + ' / ' + imgs.length;
+            var multi = imgs.length > 1 ? 'flex' : 'none';
+            prevBtn.style.display = multi;
+            nextBtn.style.display = multi;
+        }
+
+        function open(images, index) {
+            if (!images || !images.length) return;
+            if (!lb) create();
+            imgs = images; idx = Math.min(Math.max(0, index || 0), images.length - 1);
+            update();
+            lastFocus = document.activeElement;
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            var cb = lb.querySelector('[data-lb-close]'); if (cb) cb.focus();
+        }
+
+        function close() {
+            if (!lb || lb.style.display !== 'flex') return;
+            lb.style.display = 'none';
+            document.body.style.overflow = '';
+            resetZoom();
+            if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+            lastFocus = null;
+        }
+
+        function prev() { idx = idx <= 0 ? imgs.length - 1 : idx - 1; update(); }
+        function next() { idx = idx >= imgs.length - 1 ? 0 : idx + 1; update(); }
+
+        window.panthLightbox = { open: open, close: close };
+    })();
+    <?php endif; ?>
+</script>

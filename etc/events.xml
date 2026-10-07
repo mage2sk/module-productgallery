@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Panth Infotech. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_collection_load_after">
+        <observer name="panth_product_gallery_collection_load_after"
+                  instance="Panth\ProductGallery\Observer\ProductCollectionLoadAfter"/>
+    </event>
+</config>
